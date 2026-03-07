@@ -32,6 +32,11 @@ class CountriesService {
     storage.remove(CACHE_KEY);
     storage.remove(CACHE_TS_KEY);
   }
+
+  async forceRefresh(): Promise<Country[]> {
+    this.clearCache();
+    return this.getAllCountries();
+  }
 }
 
 export const countriesService = new CountriesService();

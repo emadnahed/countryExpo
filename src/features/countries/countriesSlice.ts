@@ -1,5 +1,17 @@
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { countriesService } from './countriesService';
+import { storage } from '@/utils/storage';
+
+const FAVORITES_KEY = 'favorites';
+
+function loadFavorites(): string[] {
+  try {
+    const raw = storage.getString(FAVORITES_KEY);
+    return raw ? (JSON.parse(raw) as string[]) : [];
+  } catch {
+    return [];
+  }
+}
 
 export interface Country {
   cca3: string;
@@ -35,7 +47,7 @@ const initialState: CountriesState = {
   error: null,
   searchQuery: '',
   selectedRegion: null,
-  favorites: [],
+  favorites: loadFavorites(),
 };
 
 function applyFilters(
@@ -92,6 +104,7 @@ const countriesSlice = createSlice({
       } else {
         state.favorites.push(action.payload);
       }
+      storage.set(FAVORITES_KEY, JSON.stringify(state.favorites));
     },
   },
   extraReducers: (builder) => {

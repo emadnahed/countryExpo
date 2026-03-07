@@ -7,9 +7,11 @@ const REGIONS = ['Africa', 'Americas', 'Asia', 'Europe', 'Oceania'];
 interface Props {
   selectedRegion: string | null;
   onRegionSelect: (region: string | null) => void;
+  counts: Record<string, number>;
 }
 
-export const RegionFilter = memo(({ selectedRegion, onRegionSelect }: Props) => {
+export const RegionFilter = memo(({ selectedRegion, onRegionSelect, counts }: Props) => {
+  const totalCount = Object.values(counts).reduce((a, b) => a + b, 0);
   return (
     <ScrollView
       horizontal
@@ -18,18 +20,21 @@ export const RegionFilter = memo(({ selectedRegion, onRegionSelect }: Props) => 
       contentContainerStyle={styles.container}
     >
       <Chip
-        label="All"
+        label={totalCount > 0 ? `All · ${totalCount}` : 'All'}
         selected={selectedRegion === null}
         onPress={() => onRegionSelect(null)}
       />
-      {REGIONS.map((region) => (
-        <Chip
-          key={region}
-          label={region}
-          selected={selectedRegion === region}
-          onPress={() => onRegionSelect(region === selectedRegion ? null : region)}
-        />
-      ))}
+      {REGIONS.map((region) => {
+        const count = counts[region];
+        return (
+          <Chip
+            key={region}
+            label={count != null ? `${region} · ${count}` : region}
+            selected={selectedRegion === region}
+            onPress={() => onRegionSelect(region === selectedRegion ? null : region)}
+          />
+        );
+      })}
     </ScrollView>
   );
 });
