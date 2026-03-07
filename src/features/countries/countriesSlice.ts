@@ -7,7 +7,14 @@ const FAVORITES_KEY = 'favorites';
 function loadFavorites(): string[] {
   try {
     const raw = storage.getString(FAVORITES_KEY);
-    return raw ? (JSON.parse(raw) as string[]) : [];
+    if (!raw) {
+      return [];
+    }
+    const parsed = JSON.parse(raw);
+    if (Array.isArray(parsed) && parsed.every((item) => typeof item === 'string')) {
+      return parsed;
+    }
+    return [];
   } catch {
     return [];
   }
@@ -77,6 +84,26 @@ export const fetchCountries = createAsyncThunk(
   },
 );
 
+export const toggleFavorite = createAsyncThunk(
+  'countries/toggleFavorite',
+  async (cca3: string, { getState, rejectWithValue }) => {
+    const state = getState() as { countries: CountriesState };
+    const idx = state.countries.favorites.indexOf(cca3);
+    const newFavorites = [...state.countries.favorites];
+    if (idx >= 0) {
+      newFavorites.splice(idx, 1);
+    } else {
+      newFavorites.push(cca3);
+    }
+    try {
+      storage.set(FAVORITES_KEY, JSON.stringify(newFavorites));
+      return newFavorites;
+    } catch (err) {
+      return rejectWithValue((err as Error).message);
+    }
+  },
+);
+
 const countriesSlice = createSlice({
   name: 'countries',
   initialState,
@@ -97,15 +124,6 @@ const countriesSlice = createSlice({
         action.payload,
       );
     },
-    toggleFavorite(state, action: PayloadAction<string>) {
-      const idx = state.favorites.indexOf(action.payload);
-      if (idx >= 0) {
-        state.favorites.splice(idx, 1);
-      } else {
-        state.favorites.push(action.payload);
-      }
-      storage.set(FAVORITES_KEY, JSON.stringify(state.favorites));
-    },
   },
   extraReducers: (builder) => {
     builder
@@ -125,11 +143,13 @@ const countriesSlice = createSlice({
       .addCase(fetchCountries.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload as string;
+      })
+      .addCase(toggleFavorite.fulfilled, (state, action) => {
+        state.favorites = action.payload;
       });
   },
 });
 
-export const { setSearchQuery, setRegionFilter, toggleFavorite } =
-  countriesSlice.actions;
+export const { setSearchQuery, setRegionFilter } = countriesSlice.actions;
 
 export default countriesSlice.reducer;

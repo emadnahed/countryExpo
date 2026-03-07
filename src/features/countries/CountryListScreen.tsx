@@ -61,9 +61,12 @@ export function CountryListScreen({ navigation }: Props) {
 
   const handleRefresh = useCallback(async () => {
     setRefreshing(true);
-    countriesService.clearCache();
-    await dispatch(fetchCountries());
-    setRefreshing(false);
+    try {
+      countriesService.clearCache();
+      await dispatch(fetchCountries());
+    } finally {
+      setRefreshing(false);
+    }
   }, [dispatch]);
 
   const handleSearch = useCallback(
