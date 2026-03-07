@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useLayoutEffect } from 'react';
+import React, { useCallback, useEffect, useLayoutEffect, useMemo, useState } from 'react';
 import {
   View,
   FlatList,
@@ -21,6 +21,7 @@ import { SearchBar } from '@/components/SearchBar';
 import { RegionFilter } from '@/components/RegionFilter';
 import { SkeletonLoader } from '@/components/SkeletonLoader';
 import { useTheme } from '@/hooks/useTheme';
+import { countriesService } from './countriesService';
 import type { RootStackParamList } from '@/navigation/RootNavigator';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'CountryList'>;
@@ -28,7 +29,8 @@ type Props = NativeStackScreenProps<RootStackParamList, 'CountryList'>;
 export function CountryListScreen({ navigation }: Props) {
   const dispatch = useAppDispatch();
   const colors = useTheme();
-  const { filteredCountries, loading, error, searchQuery, selectedRegion } =
+  const [refreshing, setRefreshing] = useState(false);
+  const { filteredCountries, loading, error, searchQuery, selectedRegion, countries } =
     useAppSelector((state) => state.countries);
 
   useLayoutEffect(() => {
@@ -47,6 +49,24 @@ export function CountryListScreen({ navigation }: Props) {
 
   useEffect(() => {
     dispatch(fetchCountries());
+  }, [dispatch]);
+
+  const regionCounts = useMemo(() => {
+    const counts: Record<string, number> = {};
+    for (const c of countries) {
+      counts[c.region] = (counts[c.region] ?? 0) + 1;
+    }
+    return counts;
+  }, [countries]);
+
+  const handleRefresh = useCallback(async () => {
+    setRefreshing(true);
+    try {
+      countriesService.clearCache();
+      await dispatch(fetchCountries());
+    } finally {
+      setRefreshing(false);
+    }
   }, [dispatch]);
 
   const handleSearch = useCallback(
@@ -89,6 +109,7 @@ export function CountryListScreen({ navigation }: Props) {
       <RegionFilter
         selectedRegion={selectedRegion}
         onRegionSelect={handleRegionFilter}
+        counts={regionCounts}
       />
       {loading && filteredCountries.length === 0 ? (
         <SkeletonLoader />
@@ -103,6 +124,8 @@ export function CountryListScreen({ navigation }: Props) {
           removeClippedSubviews
           showsVerticalScrollIndicator={false}
           contentContainerStyle={styles.list}
+          refreshing={refreshing}
+          onRefresh={handleRefresh}
         />
       )}
     </View>
