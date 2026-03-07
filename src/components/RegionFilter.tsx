@@ -1,5 +1,6 @@
 import React, { memo } from 'react';
 import { ScrollView, TouchableOpacity, Text, StyleSheet } from 'react-native';
+import { useTheme } from '@/hooks/useTheme';
 
 const REGIONS = ['Africa', 'Americas', 'Asia', 'Europe', 'Oceania'];
 
@@ -8,42 +9,60 @@ interface Props {
   onRegionSelect: (region: string | null) => void;
 }
 
-export const RegionFilter = memo(({ selectedRegion, onRegionSelect }: Props) => (
-  <ScrollView
-    horizontal
-    showsHorizontalScrollIndicator={false}
-    contentContainerStyle={styles.container}
-  >
-    <Chip
-      label="All"
-      selected={selectedRegion === null}
-      onPress={() => onRegionSelect(null)}
-    />
-    {REGIONS.map((region) => (
+export const RegionFilter = memo(({ selectedRegion, onRegionSelect }: Props) => {
+  const colors = useTheme();
+
+  return (
+    <ScrollView
+      horizontal
+      showsHorizontalScrollIndicator={false}
+      style={styles.scroll}
+      contentContainerStyle={styles.container}
+    >
       <Chip
-        key={region}
-        label={region}
-        selected={selectedRegion === region}
-        onPress={() => onRegionSelect(region === selectedRegion ? null : region)}
+        label="All"
+        selected={selectedRegion === null}
+        onPress={() => onRegionSelect(null)}
+        colors={colors}
       />
-    ))}
-  </ScrollView>
-));
+      {REGIONS.map((region) => (
+        <Chip
+          key={region}
+          label={region}
+          selected={selectedRegion === region}
+          onPress={() => onRegionSelect(region === selectedRegion ? null : region)}
+          colors={colors}
+        />
+      ))}
+    </ScrollView>
+  );
+});
 
 interface ChipProps {
   label: string;
   selected: boolean;
   onPress: () => void;
+  colors: ReturnType<typeof useTheme>;
 }
 
-function Chip({ label, selected, onPress }: ChipProps) {
+function Chip({ label, selected, onPress, colors }: ChipProps) {
   return (
     <TouchableOpacity
-      style={[styles.chip, selected && styles.chipSelected]}
+      style={[
+        styles.chip,
+        { backgroundColor: colors.inputBg, borderColor: colors.border },
+        selected && { backgroundColor: colors.primary, borderColor: colors.primary },
+      ]}
       onPress={onPress}
       activeOpacity={0.7}
     >
-      <Text style={[styles.chipText, selected && styles.chipTextSelected]}>
+      <Text
+        style={[
+          styles.chipText,
+          { color: colors.textSecondary },
+          selected && { color: '#fff' },
+        ]}
+      >
         {label}
       </Text>
     </TouchableOpacity>
@@ -51,30 +70,27 @@ function Chip({ label, selected, onPress }: ChipProps) {
 }
 
 const styles = StyleSheet.create({
+  scroll: {
+    // Explicit height prevents the horizontal ScrollView from being
+    // vertically compressed by the parent flex layout, which clips chips
+    height: 60,
+    flexShrink: 0,
+  },
   container: {
-    paddingHorizontal: 12,
-    paddingVertical: 8,
-    gap: 8,
+    paddingHorizontal: 16,
+    paddingVertical: 10,
+    gap: 10,
     flexDirection: 'row',
+    alignItems: 'center',
   },
   chip: {
-    paddingHorizontal: 16,
-    paddingVertical: 8,
+    paddingHorizontal: 18,
+    paddingVertical: 9,
     borderRadius: 20,
-    backgroundColor: '#f2f2f2',
     borderWidth: 1,
-    borderColor: '#e0e0e0',
-  },
-  chipSelected: {
-    backgroundColor: '#2196F3',
-    borderColor: '#2196F3',
   },
   chipText: {
     fontSize: 14,
-    color: '#555',
     fontWeight: '500',
-  },
-  chipTextSelected: {
-    color: '#fff',
   },
 });

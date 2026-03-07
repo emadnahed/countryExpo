@@ -18,13 +18,16 @@ import {
   getCurrencyList,
   getCapital,
 } from '@/utils/helpers';
+import { useTheme } from '@/hooks/useTheme';
 import type { RootStackParamList } from '@/navigation/RootNavigator';
+import type { AppColors } from '@/utils/theme';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'CountryDetail'>;
 
 export function CountryDetailScreen({ route, navigation }: Props) {
   const { cca3 } = route.params;
   const dispatch = useAppDispatch();
+  const colors = useTheme();
 
   const country = useAppSelector((state) =>
     state.countries.countries.find((c) => c.cca3 === cca3),
@@ -54,15 +57,19 @@ export function CountryDetailScreen({ route, navigation }: Props) {
 
   if (!country) {
     return (
-      <View style={styles.centered}>
-        <ActivityIndicator size="large" color="#2196F3" />
+      <View style={[styles.centered, { backgroundColor: colors.background }]}>
+        <ActivityIndicator size="large" color={colors.primary} />
       </View>
     );
   }
 
   return (
-    <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
+    <ScrollView
+      style={[styles.container, { backgroundColor: colors.surface }]}
+      showsVerticalScrollIndicator={false}
+    >
       <Animated.View entering={FadeInDown.duration(400)}>
+        {/* Flag with correct 3:2 aspect ratio */}
         <Image
           source={{ uri: country.flags.png }}
           style={styles.flag}
@@ -72,33 +79,47 @@ export function CountryDetailScreen({ route, navigation }: Props) {
 
         <View style={styles.content}>
           <View style={styles.titleRow}>
-            <Text style={styles.name}>{country.name.common}</Text>
+            <Text style={[styles.name, { color: colors.text }]}>
+              {country.name.common}
+            </Text>
             <TouchableOpacity onPress={handleFavorite} style={styles.favBtn}>
               <Text style={styles.favIcon}>{isFavorite ? '★' : '☆'}</Text>
             </TouchableOpacity>
           </View>
-          <Text style={styles.officialName}>{country.name.official}</Text>
+          <Text style={[styles.officialName, { color: colors.textSecondary }]}>
+            {country.name.official}
+          </Text>
 
           <View style={styles.section}>
-            <InfoRow label="Capital" value={getCapital(country.capital)} />
-            <InfoRow label="Region" value={country.region} />
-            <InfoRow label="Population" value={formatPopulation(country.population)} />
-            <InfoRow label="Languages" value={getLanguagesList(country.languages)} />
-            <InfoRow label="Currencies" value={getCurrencyList(country.currencies)} />
+            <InfoRow label="Capital" value={getCapital(country.capital)} colors={colors} />
+            <InfoRow label="Region" value={country.region} colors={colors} />
+            <InfoRow label="Population" value={formatPopulation(country.population)} colors={colors} />
+            <InfoRow label="Languages" value={getLanguagesList(country.languages)} colors={colors} />
+            <InfoRow label="Currencies" value={getCurrencyList(country.currencies)} colors={colors} />
           </View>
 
           {borderCountries.length > 0 && (
             <View style={styles.bordersSection}>
-              <Text style={styles.bordersTitle}>Border Countries</Text>
+              <Text style={[styles.bordersTitle, { color: colors.text }]}>
+                Border Countries
+              </Text>
               <View style={styles.bordersRow}>
                 {borderCountries.map((border) => (
                   <TouchableOpacity
                     key={border!.cca3}
-                    style={styles.borderChip}
+                    style={[
+                      styles.borderChip,
+                      {
+                        backgroundColor: colors.borderChipBg,
+                        borderColor: colors.borderChipBorder,
+                      },
+                    ]}
                     onPress={() => handleBorderPress(border!.cca3)}
                     activeOpacity={0.7}
                   >
-                    <Text style={styles.borderChipText}>{border!.name.common}</Text>
+                    <Text style={[styles.borderChipText, { color: colors.borderChipText }]}>
+                      {border!.name.common}
+                    </Text>
                   </TouchableOpacity>
                 ))}
               </View>
@@ -110,19 +131,28 @@ export function CountryDetailScreen({ route, navigation }: Props) {
   );
 }
 
-function InfoRow({ label, value }: { label: string; value: string }) {
+function InfoRow({
+  label,
+  value,
+  colors,
+}: {
+  label: string;
+  value: string;
+  colors: AppColors;
+}) {
   return (
     <View style={styles.infoRow}>
-      <Text style={styles.infoLabel}>{label}:</Text>
-      <Text style={styles.infoValue}>{value}</Text>
+      <Text style={[styles.infoLabel, { color: colors.text }]}>{label}:</Text>
+      <Text style={[styles.infoValue, { color: colors.textSecondary }]}>{value}</Text>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#fff' },
+  container: { flex: 1 },
   centered: { flex: 1, justifyContent: 'center', alignItems: 'center' },
-  flag: { width: '100%', height: 220 },
+  // Full-width flag with correct 3:2 aspect ratio
+  flag: { width: '100%', aspectRatio: 3 / 2 },
   content: { padding: 20 },
   titleRow: {
     flexDirection: 'row',
@@ -130,24 +160,22 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginBottom: 4,
   },
-  name: { fontSize: 26, fontWeight: '800', color: '#111', flex: 1 },
-  officialName: { fontSize: 14, color: '#777', marginBottom: 20, fontStyle: 'italic' },
+  name: { fontSize: 26, fontWeight: '800', flex: 1 },
+  officialName: { fontSize: 14, marginBottom: 20, fontStyle: 'italic' },
   favBtn: { padding: 8 },
   favIcon: { fontSize: 28, color: '#FFB300' },
   section: { gap: 12 },
   infoRow: { flexDirection: 'row', flexWrap: 'wrap', gap: 4 },
-  infoLabel: { fontSize: 14, fontWeight: '700', color: '#333' },
-  infoValue: { fontSize: 14, color: '#555', flex: 1 },
+  infoLabel: { fontSize: 14, fontWeight: '700' },
+  infoValue: { fontSize: 14, flex: 1 },
   bordersSection: { marginTop: 24 },
-  bordersTitle: { fontSize: 16, fontWeight: '700', color: '#333', marginBottom: 10 },
+  bordersTitle: { fontSize: 16, fontWeight: '700', marginBottom: 10 },
   bordersRow: { flexDirection: 'row', flexWrap: 'wrap', gap: 8 },
   borderChip: {
     paddingHorizontal: 14,
     paddingVertical: 7,
     borderRadius: 8,
-    backgroundColor: '#f0f4ff',
     borderWidth: 1,
-    borderColor: '#c5d0f5',
   },
-  borderChipText: { fontSize: 13, color: '#2c5ef5', fontWeight: '500' },
+  borderChipText: { fontSize: 13, fontWeight: '500' },
 });

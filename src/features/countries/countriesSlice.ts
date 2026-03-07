@@ -51,7 +51,7 @@ function applyFilters(
     const q = query.toLowerCase();
     result = result.filter((c) => c.name.common.toLowerCase().includes(q));
   }
-  return result;
+  return [...result].sort((a, b) => a.name.common.localeCompare(b.name.common));
 }
 
 export const fetchCountries = createAsyncThunk(
