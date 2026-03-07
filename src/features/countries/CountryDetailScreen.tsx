@@ -20,7 +20,6 @@ import {
 } from '@/utils/helpers';
 import { useTheme } from '@/hooks/useTheme';
 import type { RootStackParamList } from '@/navigation/RootNavigator';
-import type { AppColors } from '@/utils/theme';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'CountryDetail'>;
 
@@ -91,11 +90,11 @@ export function CountryDetailScreen({ route, navigation }: Props) {
           </Text>
 
           <View style={styles.section}>
-            <InfoRow label="Capital" value={getCapital(country.capital)} colors={colors} />
-            <InfoRow label="Region" value={country.region} colors={colors} />
-            <InfoRow label="Population" value={formatPopulation(country.population)} colors={colors} />
-            <InfoRow label="Languages" value={getLanguagesList(country.languages)} colors={colors} />
-            <InfoRow label="Currencies" value={getCurrencyList(country.currencies)} colors={colors} />
+            <InfoRow label="Capital" value={getCapital(country.capital)} />
+            <InfoRow label="Region" value={country.region} />
+            <InfoRow label="Population" value={formatPopulation(country.population)} />
+            <InfoRow label="Languages" value={getLanguagesList(country.languages)} />
+            <InfoRow label="Currencies" value={getCurrencyList(country.currencies)} />
           </View>
 
           {borderCountries.length > 0 && (
@@ -131,15 +130,8 @@ export function CountryDetailScreen({ route, navigation }: Props) {
   );
 }
 
-function InfoRow({
-  label,
-  value,
-  colors,
-}: {
-  label: string;
-  value: string;
-  colors: AppColors;
-}) {
+function InfoRow({ label, value }: { label: string; value: string }) {
+  const colors = useTheme();
   return (
     <View style={styles.infoRow}>
       <Text style={[styles.infoLabel, { color: colors.text }]}>{label}:</Text>

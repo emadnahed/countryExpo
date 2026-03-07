@@ -10,8 +10,6 @@ interface Props {
 }
 
 export const RegionFilter = memo(({ selectedRegion, onRegionSelect }: Props) => {
-  const colors = useTheme();
-
   return (
     <ScrollView
       horizontal
@@ -23,7 +21,6 @@ export const RegionFilter = memo(({ selectedRegion, onRegionSelect }: Props) => 
         label="All"
         selected={selectedRegion === null}
         onPress={() => onRegionSelect(null)}
-        colors={colors}
       />
       {REGIONS.map((region) => (
         <Chip
@@ -31,7 +28,6 @@ export const RegionFilter = memo(({ selectedRegion, onRegionSelect }: Props) => 
           label={region}
           selected={selectedRegion === region}
           onPress={() => onRegionSelect(region === selectedRegion ? null : region)}
-          colors={colors}
         />
       ))}
     </ScrollView>
@@ -42,10 +38,10 @@ interface ChipProps {
   label: string;
   selected: boolean;
   onPress: () => void;
-  colors: ReturnType<typeof useTheme>;
 }
 
-function Chip({ label, selected, onPress, colors }: ChipProps) {
+function Chip({ label, selected, onPress }: ChipProps) {
+  const colors = useTheme();
   return (
     <TouchableOpacity
       style={[

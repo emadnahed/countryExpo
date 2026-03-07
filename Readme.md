@@ -41,6 +41,7 @@ src
 │   └── countries
 │        ├── CountryListScreen.tsx
 │        ├── CountryDetailScreen.tsx
+│        ├── MapScreen.tsx
 │        ├── countriesSlice.ts
 │        └── countriesService.ts
 │
