@@ -1,9 +1,15 @@
 import React from 'react';
-import { NavigationContainer } from '@react-navigation/native';
+import { useColorScheme } from 'react-native';
+import {
+  NavigationContainer,
+  DarkTheme,
+  DefaultTheme,
+} from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { CountryListScreen } from '@/features/countries/CountryListScreen';
 import { CountryDetailScreen } from '@/features/countries/CountryDetailScreen';
 import { MapScreen } from '@/features/countries/MapScreen';
+import { Colors } from '@/utils/theme';
 
 export type RootStackParamList = {
   CountryList: undefined;
@@ -25,12 +31,16 @@ const linking = {
 };
 
 export function RootNavigator() {
+  const scheme = useColorScheme();
+  const isDark = scheme === 'dark';
+  const headerBg = isDark ? Colors.dark.headerBg : Colors.light.headerBg;
+
   return (
-    <NavigationContainer linking={linking}>
+    <NavigationContainer linking={linking} theme={isDark ? DarkTheme : DefaultTheme}>
       <Stack.Navigator
         initialRouteName="CountryList"
         screenOptions={{
-          headerStyle: { backgroundColor: '#2196F3' },
+          headerStyle: { backgroundColor: headerBg },
           headerTintColor: '#fff',
           headerTitleStyle: { fontWeight: 'bold' },
         }}
