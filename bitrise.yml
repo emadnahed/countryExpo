@@ -9,7 +9,7 @@ app:
 trigger_map:
   - push_branch: main
     workflow: e2e
-  - pull_request_source_branch: "*"
+  - pull_request_target_branch: main
     workflow: ci
 
 workflows:
