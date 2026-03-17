@@ -29,6 +29,7 @@
       }
     },
     "plugins": [
+      "expo-system-ui",
       [
         "react-native-maps",
         {

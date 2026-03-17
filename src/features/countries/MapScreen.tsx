@@ -4,11 +4,13 @@ import MapView, { Marker, PROVIDER_GOOGLE, PROVIDER_DEFAULT } from 'react-native
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { useAppSelector } from '@/store/hooks';
 import type { RootStackParamList } from '@/navigation/RootNavigator';
+import { useTheme } from '@/hooks/useTheme';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Map'>;
 
 export function MapScreen({ navigation }: Props) {
   const countries = useAppSelector((state) => state.countries.countries);
+  const colors = useTheme();
 
   const handleMarkerPress = useCallback(
     (cca3: string) => navigation.navigate('CountryDetail', { cca3 }),
@@ -17,14 +19,15 @@ export function MapScreen({ navigation }: Props) {
 
   if (countries.length === 0) {
     return (
-      <View style={styles.centered}>
-        <Text style={styles.emptyText}>No countries loaded yet.</Text>
+      <View testID="map-empty" style={[styles.centered, { backgroundColor: colors.background }]}>
+        <Text style={[styles.emptyText, { color: colors.textSecondary }]}>No countries loaded yet.</Text>
       </View>
     );
   }
 
   return (
     <MapView
+      testID="map-view"
       style={StyleSheet.absoluteFillObject}
       provider={Platform.OS === 'android' ? PROVIDER_GOOGLE : PROVIDER_DEFAULT}
       initialRegion={{

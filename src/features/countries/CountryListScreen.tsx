@@ -37,11 +37,12 @@ export function CountryListScreen({ navigation }: Props) {
     navigation.setOptions({
       headerRight: () => (
         <TouchableOpacity
+          testID="map-btn"
           onPress={() => navigation.navigate('Map')}
           style={styles.mapBtn}
           accessibilityLabel="Open world map"
         >
-          <Ionicons name="map-outline" size={24} color="#fff" />
+          <Ionicons name="map-outline" size={24} color={colors.text} />
         </TouchableOpacity>
       ),
     });
@@ -95,7 +96,7 @@ export function CountryListScreen({ navigation }: Props) {
 
   if (error && filteredCountries.length === 0) {
     return (
-      <View style={[styles.centered, { backgroundColor: colors.background }]}>
+      <View testID="error-view" style={[styles.centered, { backgroundColor: colors.background }]}>
         <Text style={[styles.errorText, { color: colors.error }]}>
           Failed to load: {error}
         </Text>
@@ -115,6 +116,7 @@ export function CountryListScreen({ navigation }: Props) {
         <SkeletonLoader />
       ) : (
         <FlatList
+          testID="country-list"
           data={filteredCountries}
           keyExtractor={keyExtractor}
           renderItem={renderItem}
@@ -135,7 +137,7 @@ export function CountryListScreen({ navigation }: Props) {
 const styles = StyleSheet.create({
   container: { flex: 1 },
   centered: { flex: 1, justifyContent: 'center', alignItems: 'center', padding: 24 },
-  list: { paddingVertical: 8 },
+  list: { paddingVertical: 12, paddingBottom: 60 },
   errorText: { fontSize: 14, textAlign: 'center' },
-  mapBtn: { marginRight: 4, padding: 4 },
+  mapBtn: { marginRight: 8, padding: 8 },
 });

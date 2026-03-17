@@ -1,5 +1,6 @@
-import React, { memo } from 'react';
-import { ScrollView, TouchableOpacity, Text, StyleSheet } from 'react-native';
+import React, { memo, useCallback } from 'react';
+import { ScrollView, Pressable, Text, StyleSheet } from 'react-native';
+import Animated, { useSharedValue, useAnimatedStyle, withSpring } from 'react-native-reanimated';
 import { useTheme } from '@/hooks/useTheme';
 
 const REGIONS = ['Africa', 'Americas', 'Asia', 'Europe', 'Oceania'];
@@ -14,12 +15,14 @@ export const RegionFilter = memo(({ selectedRegion, onRegionSelect, counts }: Pr
   const totalCount = Object.values(counts).reduce((a, b) => a + b, 0);
   return (
     <ScrollView
+      testID="region-filter-scroll"
       horizontal
       showsHorizontalScrollIndicator={false}
       style={styles.scroll}
       contentContainerStyle={styles.container}
     >
       <Chip
+        testID="region-chip-all"
         label={totalCount > 0 ? `All · ${totalCount}` : 'All'}
         selected={selectedRegion === null}
         onPress={() => onRegionSelect(null)}
@@ -29,6 +32,7 @@ export const RegionFilter = memo(({ selectedRegion, onRegionSelect, counts }: Pr
         return (
           <Chip
             key={region}
+            testID={`region-chip-${region.toLowerCase()}`}
             label={count != null ? `${region} · ${count}` : region}
             selected={selectedRegion === region}
             onPress={() => onRegionSelect(region === selectedRegion ? null : region)}
@@ -43,55 +47,78 @@ interface ChipProps {
   label: string;
   selected: boolean;
   onPress: () => void;
+  testID?: string;
 }
 
-function Chip({ label, selected, onPress }: ChipProps) {
+function Chip({ label, selected, onPress, testID }: ChipProps) {
   const colors = useTheme();
+  const scale = useSharedValue(1);
+
+  const animatedStyle = useAnimatedStyle(() => ({
+    transform: [{ scale: scale.value }],
+  }));
+
+  const handlePressIn = useCallback(() => {
+    scale.value = withSpring(0.9, { damping: 12, stiffness: 400 });
+  }, [scale]);
+
+  const handlePressOut = useCallback(() => {
+    scale.value = withSpring(1, { damping: 15, stiffness: 400 });
+  }, [scale]);
+
   return (
-    <TouchableOpacity
-      style={[
-        styles.chip,
-        { backgroundColor: colors.inputBg, borderColor: colors.border },
-        selected && { backgroundColor: colors.primary, borderColor: colors.primary },
-      ]}
-      onPress={onPress}
-      activeOpacity={0.7}
-    >
-      <Text
+    <Animated.View style={animatedStyle}>
+      <Pressable
+        testID={testID}
         style={[
-          styles.chipText,
-          { color: colors.textSecondary },
-          selected && { color: '#fff' },
+          styles.chip,
+          { backgroundColor: colors.surface, borderColor: 'transparent' },
+          selected && { backgroundColor: colors.text, borderColor: colors.text },
         ]}
+        onPress={onPress}
+        onPressIn={handlePressIn}
+        onPressOut={handlePressOut}
       >
-        {label}
-      </Text>
-    </TouchableOpacity>
+        <Text
+          style={[
+            styles.chipText,
+            { color: colors.textSecondary },
+            selected && { color: colors.surface },
+          ]}
+        >
+          {label}
+        </Text>
+      </Pressable>
+    </Animated.View>
   );
 }
 
 const styles = StyleSheet.create({
   scroll: {
-    // Explicit height prevents the horizontal ScrollView from being
-    // vertically compressed by the parent flex layout, which clips chips
-    height: 60,
+    height: 70,
     flexShrink: 0,
   },
   container: {
-    paddingHorizontal: 16,
-    paddingVertical: 10,
-    gap: 10,
+    paddingHorizontal: 20,
+    paddingVertical: 12,
+    gap: 12,
     flexDirection: 'row',
     alignItems: 'center',
   },
   chip: {
-    paddingHorizontal: 18,
-    paddingVertical: 9,
-    borderRadius: 20,
+    paddingHorizontal: 22,
+    paddingVertical: 12,
+    borderRadius: 28,
     borderWidth: 1,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.05,
+    shadowRadius: 4,
+    elevation: 2,
   },
   chipText: {
-    fontSize: 14,
-    fontWeight: '500',
+    fontSize: 15,
+    fontWeight: '600',
+    letterSpacing: -0.2,
   },
 });
