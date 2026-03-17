@@ -15,7 +15,8 @@ function loadFavorites(): string[] {
       return parsed;
     }
     return [];
-  } catch {
+  } catch (error) {
+    console.error('Failed to load favorites from storage:', error);
     return [];
   }
 }
@@ -88,13 +89,10 @@ export const toggleFavorite = createAsyncThunk(
   'countries/toggleFavorite',
   async (cca3: string, { getState, rejectWithValue }) => {
     const state = getState() as { countries: CountriesState };
-    const idx = state.countries.favorites.indexOf(cca3);
-    const newFavorites = [...state.countries.favorites];
-    if (idx >= 0) {
-      newFavorites.splice(idx, 1);
-    } else {
-      newFavorites.push(cca3);
-    }
+    const { favorites } = state.countries;
+    const newFavorites = favorites.includes(cca3)
+      ? favorites.filter((id) => id !== cca3)
+      : [...favorites, cca3];
     try {
       storage.set(FAVORITES_KEY, JSON.stringify(newFavorites));
       return newFavorites;

@@ -53,11 +53,10 @@ export function CountryListScreen({ navigation }: Props) {
   }, [dispatch]);
 
   const regionCounts = useMemo(() => {
-    const counts: Record<string, number> = {};
-    for (const c of countries) {
-      counts[c.region] = (counts[c.region] ?? 0) + 1;
-    }
-    return counts;
+    return countries.reduce<Record<string, number>>((counts, country) => {
+      counts[country.region] = (counts[country.region] ?? 0) + 1;
+      return counts;
+    }, {});
   }, [countries]);
 
   const handleRefresh = useCallback(async () => {
