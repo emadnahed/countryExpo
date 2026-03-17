@@ -1,13 +1,11 @@
-import React, { useCallback, useEffect, useLayoutEffect, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import {
   View,
   FlatList,
   Text,
   StyleSheet,
-  TouchableOpacity,
   ListRenderItem,
 } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
 import {
@@ -23,6 +21,7 @@ import { SkeletonLoader } from '@/components/SkeletonLoader';
 import { useTheme } from '@/hooks/useTheme';
 import { countriesService } from './countriesService';
 import type { RootStackParamList } from '@/navigation/RootNavigator';
+import { Header } from '@/components/Header';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'CountryList'>;
 
@@ -32,21 +31,6 @@ export function CountryListScreen({ navigation }: Props) {
   const [refreshing, setRefreshing] = useState(false);
   const { filteredCountries, loading, error, searchQuery, selectedRegion, countries } =
     useAppSelector((state) => state.countries);
-
-  useLayoutEffect(() => {
-    navigation.setOptions({
-      headerRight: () => (
-        <TouchableOpacity
-          testID="map-btn"
-          onPress={() => navigation.navigate('Map')}
-          style={styles.mapBtn}
-          accessibilityLabel="Open world map"
-        >
-          <Ionicons name="map-outline" size={24} color={colors.text} />
-        </TouchableOpacity>
-      ),
-    });
-  }, [navigation]);
 
   useEffect(() => {
     dispatch(fetchCountries());
@@ -105,6 +89,15 @@ export function CountryListScreen({ navigation }: Props) {
 
   return (
     <View style={[styles.container, { backgroundColor: colors.background }]}>
+      <Header
+        title="Country Explorer"
+        rightAction={{
+          icon: 'map-outline',
+          onPress: () => navigation.navigate('Map'),
+          accessibilityLabel: 'Open world map',
+          testID: 'map-btn',
+        }}
+      />
       <SearchBar value={searchQuery} onChangeText={handleSearch} />
       <RegionFilter
         selectedRegion={selectedRegion}
@@ -138,5 +131,4 @@ const styles = StyleSheet.create({
   centered: { flex: 1, justifyContent: 'center', alignItems: 'center', padding: 24 },
   list: { paddingVertical: 12, paddingBottom: 60 },
   errorText: { fontSize: 14, textAlign: 'center' },
-  mapBtn: { marginRight: 8, padding: 8 },
 });

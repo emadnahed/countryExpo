@@ -29,6 +29,7 @@ import {
 } from '@/utils/helpers';
 import { useTheme } from '@/hooks/useTheme';
 import type { RootStackParamList } from '@/navigation/RootNavigator';
+import { Header } from '@/components/Header';
 
 const { width, height } = Dimensions.get('window');
 const HEADER_HEIGHT = 400;
@@ -125,6 +126,12 @@ export function CountryDetailScreen({ route, navigation }: Props) {
         />
         <Animated.View style={[styles.imageOverlay, overlayStyle, { backgroundColor: colors.background }]} />
       </Animated.View>
+
+      {/* Transparent back button — floats over the hero image */}
+      <Header
+        variant="transparent"
+        onBack={() => navigation.goBack()}
+      />
 
       <Animated.ScrollView
         testID="detail-scroll"
