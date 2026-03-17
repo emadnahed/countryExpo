@@ -21,21 +21,16 @@
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.countryexplorer.app",
-      "config": {
-        "googleMaps": {
-          "apiKey": "YOUR_GOOGLE_MAPS_API_KEY"
-        }
-      }
+      "package": "com.countryexplorer.app"
     },
     "plugins": [
-      "expo-system-ui",
-      [
-        "react-native-maps",
-        {
-          "googleMapsApiKey": "YOUR_GOOGLE_MAPS_API_KEY"
-        }
-      ]
-    ]
+      "expo-system-ui"
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "be61b886-8a99-4e4d-8eae-4f440f442280"
+      }
+    },
+    "owner": "emaadnahed"
   }
 }
