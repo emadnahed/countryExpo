@@ -36,6 +36,12 @@
           "googleMapsApiKey": "YOUR_GOOGLE_MAPS_API_KEY"
         }
       ]
-    ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "be61b886-8a99-4e4d-8eae-4f440f442280"
+      }
+    },
+    "owner": "emaadnahed"
   }
 }
