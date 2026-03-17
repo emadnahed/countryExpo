@@ -1,0 +1,94 @@
+format_version: "13"
+default_step_lib_source: https://github.com/bitrise-io/bitrise-steplib.git
+
+app:
+  envs:
+    - GRADLEW_PATH: android/gradlew
+    - ANDROID_AVD_NAME: Pixel_API_34
+
+trigger_map:
+  - push_branch: main
+    workflow: e2e
+  - pull_request_target_branch: main
+    workflow: ci
+
+workflows:
+
+  # ── setup ─────────────────────────────────────────────────────────────────
+  # Shared steps reused via before_run in ci and e2e.
+  setup:
+    steps:
+      - git-clone@8: {}
+
+      - nvm@1:
+          inputs:
+            - node_version: "20"
+
+      - script@1.1:
+          title: Install dependencies
+          inputs:
+            - content: npm ci
+
+      - script@1.1:
+          title: Lint
+          inputs:
+            - content: npm run lint
+
+      - script@1.1:
+          title: Unit tests
+          inputs:
+            - content: npm run test:ci
+
+  # ── ci ────────────────────────────────────────────────────────────────────
+  # Runs on every PR: lint + unit tests only.
+  ci:
+    before_run:
+      - setup
+
+  # ── e2e ───────────────────────────────────────────────────────────────────
+  # Runs on push to main: lint + unit tests + Detox E2E on Android emulator.
+  # EAS Build (preview) is triggered after tests pass to produce APK/IPA.
+  e2e:
+    before_run:
+      - setup
+    steps:
+      - script@1.1:
+          title: Expo prebuild (Android)
+          inputs:
+            - content: npx expo prebuild --platform android --clean
+
+      - avd-manager@1:
+          inputs:
+            - profile: pixel
+            - api_level: "34"
+            - tag: google_apis
+            - abi: x86_64
+            - create_command_flags: "--sdcard 512M"
+            - start_command_flags: "-no-window -gpu swiftshader_indirect -noaudio -no-boot-anim"
+
+      - wait-for-android-emulator@1: {}
+
+      - script@1.1:
+          title: Build Android debug APKs (app + test)
+          inputs:
+            - content: npx detox build --configuration android.ci.debug
+
+      - script@1.1:
+          title: Run Detox E2E (attached emulator)
+          inputs:
+            - content: npm run e2e:android:ci
+
+      - deploy-to-bitrise-io@2:
+          title: Archive debug APK artifact
+          inputs:
+            - deploy_path: android/app/build/outputs/apk/debug/app-debug.apk
+
+      - script@1.1:
+          title: Trigger EAS Build (preview — APK + IPA)
+          inputs:
+            - content: |
+                npx eas-cli build \
+                  --profile preview \
+                  --platform all \
+                  --non-interactive \
+                  --no-wait
