@@ -26,7 +26,7 @@ export function SkeletonLoader() {
   const animatedStyle = useAnimatedStyle(() => ({ opacity: opacity.value }));
 
   return (
-    <View style={[styles.container, { backgroundColor: colors.background }]}>
+    <View testID="skeleton-loader" style={[styles.container, { backgroundColor: colors.background }]}>
       {Array.from({ length: CARD_COUNT }).map((_, i) => (
         <Animated.View
           key={i}

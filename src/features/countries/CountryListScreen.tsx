@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useLayoutEffect } from 'react';
+import React, { useCallback, useEffect, useLayoutEffect, useMemo, useState } from 'react';
 import {
   View,
   FlatList,
@@ -21,6 +21,7 @@ import { SearchBar } from '@/components/SearchBar';
 import { RegionFilter } from '@/components/RegionFilter';
 import { SkeletonLoader } from '@/components/SkeletonLoader';
 import { useTheme } from '@/hooks/useTheme';
+import { countriesService } from './countriesService';
 import type { RootStackParamList } from '@/navigation/RootNavigator';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'CountryList'>;
@@ -28,18 +29,20 @@ type Props = NativeStackScreenProps<RootStackParamList, 'CountryList'>;
 export function CountryListScreen({ navigation }: Props) {
   const dispatch = useAppDispatch();
   const colors = useTheme();
-  const { filteredCountries, loading, error, searchQuery, selectedRegion } =
+  const [refreshing, setRefreshing] = useState(false);
+  const { filteredCountries, loading, error, searchQuery, selectedRegion, countries } =
     useAppSelector((state) => state.countries);
 
   useLayoutEffect(() => {
     navigation.setOptions({
       headerRight: () => (
         <TouchableOpacity
+          testID="map-btn"
           onPress={() => navigation.navigate('Map')}
           style={styles.mapBtn}
           accessibilityLabel="Open world map"
         >
-          <Ionicons name="map-outline" size={24} color="#fff" />
+          <Ionicons name="map-outline" size={24} color={colors.text} />
         </TouchableOpacity>
       ),
     });
@@ -47,6 +50,23 @@ export function CountryListScreen({ navigation }: Props) {
 
   useEffect(() => {
     dispatch(fetchCountries());
+  }, [dispatch]);
+
+  const regionCounts = useMemo(() => {
+    return countries.reduce<Record<string, number>>((counts, country) => {
+      counts[country.region] = (counts[country.region] ?? 0) + 1;
+      return counts;
+    }, {});
+  }, [countries]);
+
+  const handleRefresh = useCallback(async () => {
+    setRefreshing(true);
+    try {
+      countriesService.clearCache();
+      await dispatch(fetchCountries());
+    } finally {
+      setRefreshing(false);
+    }
   }, [dispatch]);
 
   const handleSearch = useCallback(
@@ -75,7 +95,7 @@ export function CountryListScreen({ navigation }: Props) {
 
   if (error && filteredCountries.length === 0) {
     return (
-      <View style={[styles.centered, { backgroundColor: colors.background }]}>
+      <View testID="error-view" style={[styles.centered, { backgroundColor: colors.background }]}>
         <Text style={[styles.errorText, { color: colors.error }]}>
           Failed to load: {error}
         </Text>
@@ -89,11 +109,13 @@ export function CountryListScreen({ navigation }: Props) {
       <RegionFilter
         selectedRegion={selectedRegion}
         onRegionSelect={handleRegionFilter}
+        counts={regionCounts}
       />
       {loading && filteredCountries.length === 0 ? (
         <SkeletonLoader />
       ) : (
         <FlatList
+          testID="country-list"
           data={filteredCountries}
           keyExtractor={keyExtractor}
           renderItem={renderItem}
@@ -103,6 +125,8 @@ export function CountryListScreen({ navigation }: Props) {
           removeClippedSubviews
           showsVerticalScrollIndicator={false}
           contentContainerStyle={styles.list}
+          refreshing={refreshing}
+          onRefresh={handleRefresh}
         />
       )}
     </View>
@@ -112,7 +136,7 @@ export function CountryListScreen({ navigation }: Props) {
 const styles = StyleSheet.create({
   container: { flex: 1 },
   centered: { flex: 1, justifyContent: 'center', alignItems: 'center', padding: 24 },
-  list: { paddingVertical: 8 },
+  list: { paddingVertical: 12, paddingBottom: 60 },
   errorText: { fontSize: 14, textAlign: 'center' },
-  mapBtn: { marginRight: 4, padding: 4 },
+  mapBtn: { marginRight: 8, padding: 8 },
 });

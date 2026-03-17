@@ -1,50 +1,101 @@
+# Dependencies
 node_modules/
+
+# Expo
 .expo/
+.expo-shared/
 dist/
 web-build/
 
-# Native
+# Generated native directories (regenerate with: expo prebuild)
+android/
+ios/
+
+# Metro bundler
+.metro-health-check*
+
+# Environment variables
+.env
+.env.*
+!.env.example
+
+# Bundle artifacts
+*.jsbundle
+
+# macOS
+.DS_Store
+
+# Native signing / certificates
 *.orig.*
 *.jks
 *.p8
 *.p12
 *.key
 *.mobileprovision
+*.keystore
+!debug.keystore
+*.ipa
+*.apk
+*.aar
+*.so
 
-# Metro
-.metro-health-check*
+# Xcode user-specific
+*.pbxuser
+!default.pbxuser
+*.mode1v3
+!default.mode1v3
+*.mode2v3
+!default.mode2v3
+*.perspectivev3
+!default.perspectivev3
+xcuserdata
+*.xccheckout
+*.moved-aside
+DerivedData
+*.hmap
+*.xcuserstate
+ios/.xcode.env.local
 
-# Environment
-.env
-.env.*
-!.env.example
+# Android
+.gradle/
+local.properties
+bin/
+gen/
+.cxx/
+captures/
+*.iml
+*.hprof
 
-# macOS
-.DS_Store
+# Ruby / CocoaPods
+/vendor/bundle/
 
+# Fastlane
+**/fastlane/report.xml
+**/fastlane/Preview.html
+**/fastlane/screenshots
+**/fastlane/test_output
 
-# claude
-.claude/
-.claude/*
-!.claude/settings.local.json
-
-# Build artifacts
-ios/build/
-android/build/
-android/app/build/
-.expo-shared/
-
-# IDE/Editor
+# IDE / Editor
 .vscode/
 .idea/
 *.swp
 *.swo
 
-# Testing/Coverage
+# Testing / Coverage
 coverage/
-__tests__/coverage/
+/coverage
 
-# Temporary files
+# Logs / Temp files
+*.log
+npm-debug.log
+yarn-error.log
 *.tmp
 *.temp
 logs/
+
+# Claude Code tooling
+.claude/
+.claude/*
+!.claude/settings.local.json
+.agents/
+skills-lock.json
