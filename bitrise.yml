@@ -14,9 +14,9 @@ trigger_map:
 
 workflows:
 
-  # ── ci ────────────────────────────────────────────────────────────────────
-  # Runs on every PR: lint + unit tests only.
-  ci:
+  # ── setup ─────────────────────────────────────────────────────────────────
+  # Shared steps reused via before_run in ci and e2e.
+  setup:
     steps:
       - git-clone@8: {}
 
@@ -38,33 +38,20 @@ workflows:
           title: Unit tests
           inputs:
             - content: npm run test:ci
+
+  # ── ci ────────────────────────────────────────────────────────────────────
+  # Runs on every PR: lint + unit tests only.
+  ci:
+    before_run:
+      - setup
 
   # ── e2e ───────────────────────────────────────────────────────────────────
   # Runs on push to main: lint + unit tests + Detox E2E on Android emulator.
   # EAS Build (preview) is triggered after tests pass to produce APK/IPA.
   e2e:
+    before_run:
+      - setup
     steps:
-      - git-clone@8: {}
-
-      - nvm@1:
-          inputs:
-            - node_version: "20"
-
-      - script@1.1:
-          title: Install dependencies
-          inputs:
-            - content: npm ci
-
-      - script@1.1:
-          title: Lint
-          inputs:
-            - content: npm run lint
-
-      - script@1.1:
-          title: Unit tests
-          inputs:
-            - content: npm run test:ci
-
       - script@1.1:
           title: Expo prebuild (Android)
           inputs:
@@ -84,10 +71,7 @@ workflows:
       - script@1.1:
           title: Build Android debug APKs (app + test)
           inputs:
-            - content: |
-                cd android
-                ./gradlew assembleDebug assembleAndroidTest -DtestBuildType=debug
-                cd ..
+            - content: npx detox build --configuration android.ci.debug
 
       - script@1.1:
           title: Run Detox E2E (attached emulator)
