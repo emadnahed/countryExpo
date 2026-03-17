@@ -66,12 +66,6 @@ workflows:
             - content: npm run test:ci
 
       - script@1.1:
-          title: Inject Google Maps API key
-          inputs:
-            - content: |
-                sed -i "s/YOUR_GOOGLE_MAPS_API_KEY/$GOOGLE_MAPS_API_KEY/g" app.json
-
-      - script@1.1:
           title: Expo prebuild (Android)
           inputs:
             - content: npx expo prebuild --platform android --clean
