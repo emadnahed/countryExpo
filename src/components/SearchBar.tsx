@@ -11,7 +11,7 @@ interface Props {
   onChangeText: (text: string) => void;
 }
 
-export const SearchBar = memo(({ value, onChangeText }: Props) => {
+export const SearchBar = memo(function SearchBar({ value, onChangeText }: Props) {
   const colors = useTheme();
   const [isFocused, setIsFocused] = useState(false);
   const focusAnim = useSharedValue(0);

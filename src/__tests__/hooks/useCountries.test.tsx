@@ -51,9 +51,10 @@ function buildStore(preloadedCountries: Country[] = []) {
 }
 
 function wrapper(store: ReturnType<typeof buildStore>) {
-  return ({ children }: { children: React.ReactNode }) => (
-    <Provider store={store}>{children}</Provider>
-  );
+  function Wrapper({ children }: { children: React.ReactNode }) {
+    return <Provider store={store}>{children}</Provider>;
+  }
+  return Wrapper;
 }
 
 describe('useCountries', () => {
