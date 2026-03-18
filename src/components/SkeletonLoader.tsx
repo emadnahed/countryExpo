@@ -30,6 +30,7 @@ export function SkeletonLoader() {
       {Array.from({ length: CARD_COUNT }).map((_, i) => (
         <Animated.View
           key={i}
+          testID="skeleton-card"
           style={[styles.card, { backgroundColor: colors.surface }, animatedStyle]}
         >
           <View style={[styles.flag, { backgroundColor: colors.skeleton }]} />

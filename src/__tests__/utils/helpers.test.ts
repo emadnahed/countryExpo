@@ -43,7 +43,8 @@ describe('formatArea', () => {
   });
 
   it('returns N/A when area is null', () => {
-    expect(formatArea(null as unknown as undefined)).toBe('N/A');
+    // @ts-expect-error Testing runtime handling of null, which is covered by `== null` check.
+    expect(formatArea(null)).toBe('N/A');
   });
 
   it('formats 0 as 0 km²', () => {
