@@ -11,6 +11,7 @@
     "prebuild": "expo prebuild --clean",
     "test": "jest --watchAll",
     "test:ci": "jest --ci",
+    "test:all": "jest --ci && detox test --configuration ios.sim.debug",
     "e2e:build": "detox build --configuration ios.sim.debug",
     "e2e:test": "detox test --configuration ios.sim.debug",
     "e2e:test:ci": "detox test --configuration ios.sim.debug --headless --record-logs all",
@@ -74,8 +75,13 @@
   },
   "jest": {
     "preset": "jest-expo",
+    "testPathIgnorePatterns": ["/node_modules/", "/e2e/"],
+    "moduleNameMapper": {
+      "^react-native-reanimated$": "<rootDir>/__mocks__/react-native-reanimated.js",
+      "^@/(.*)$": "<rootDir>/src/$1"
+    },
     "transformIgnorePatterns": [
-      "node_modules/(?!((jest-)?react-native|@react-native(-community)?)|expo(nent)?|@expo(nent)?/.*|react-navigation|@react-navigation/.*|react-native-mmkv|react-native-webview|@reduxjs)"
+      "node_modules/(?!((jest-)?react-native|@react-native(-community)?)|expo(nent)?|@expo(nent)?/.*|react-navigation|@react-navigation/.*|react-native-mmkv|react-native-webview|@reduxjs|immer|react-redux)"
     ]
   }
 }

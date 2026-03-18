@@ -21,7 +21,7 @@ export async function waitForCountryList(timeout = 30000): Promise<void> {
 
 /**
  * Type in the search bar to filter, then tap the matching card.
- * Uses a 20s timeout for the card — generous for fresh cold-start (no cache).
+ * Uses a 10s timeout for the card — data is always loaded before this is called.
  */
 export async function navigateToCountry(name: string, cca3: string): Promise<void> {
   await element(by.id('search-input')).tap();
@@ -29,7 +29,7 @@ export async function navigateToCountry(name: string, cca3: string): Promise<voi
   await element(by.id('search-input')).replaceText(name);
   await waitFor(element(by.id(`country-card-${cca3}`)))
     .toBeVisible()
-    .withTimeout(20000);
+    .withTimeout(10000);
   await element(by.id(`country-card-${cca3}`)).tap();
   await waitFor(element(by.id('country-name')))
     .toBeVisible()
@@ -47,5 +47,5 @@ export async function clearSearch(): Promise<void> {
   } catch {
     // keyboard may already be dismissed
   }
-  await waitForCountryList(15000);
+  await waitForCountryList(8000);
 }
