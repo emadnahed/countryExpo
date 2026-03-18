@@ -478,7 +478,9 @@ export const LeafletMap = forwardRef<LeafletMapHandle, LeafletMapProps>(
             const icon = msg.level === 'error' ? '🔴' : msg.level === 'warn' ? '🟡' : '🔵';
             console.log(`${icon} [WebView] ${msg.msg}`);
           }
-        } catch (_) {}
+        } catch (err) {
+          console.error('[LeafletMap] failed to parse WebView message:', err, event.nativeEvent.data);
+        }
       },
       [onCountryPress],
     );

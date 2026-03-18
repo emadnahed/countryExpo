@@ -1,5 +1,6 @@
 import React, {
   useCallback,
+  useEffect,
   useMemo,
   useRef,
   useState,
@@ -36,6 +37,13 @@ type Props = NativeStackScreenProps<RootStackParamList, 'Map'>;
 const CARD_HEIGHT = 170;
 const SPRING = { damping: 22, stiffness: 260 };
 
+// Floating header geometry — must stay in sync with Header's floatRow style
+const HEADER_TOP_OFFSET  = 8;   // gap below safe-area inset
+const HEADER_HEIGHT      = 44;  // floatCircle / floatTitlePill height
+const HEADER_BOTTOM_GAP  = 12;  // gap between header and search bar
+const SEARCH_BAR_HEIGHT  = 48;
+const SEARCH_RESULTS_GAP = 4;
+
 export function MapScreen({ navigation }: Props) {
   const countries = useAppSelector((s) => s.countries.countries);
   const colors = useTheme();
@@ -43,14 +51,20 @@ export function MapScreen({ navigation }: Props) {
   const isDark = useColorScheme() === 'dark';
 
   const mapRef = useRef<LeafletMapHandle>(null);
+  const blurTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   // Glass surface for search bar + results — same formula as Header's glass variant
   const glass = isDark ? 'rgba(12,12,12,0.82)' : 'rgba(255,255,255,0.90)';
   const glassBorder = isDark ? 'rgba(255,255,255,0.07)' : 'rgba(0,0,0,0.05)';
 
-  // Vertical layout: Header occupies insets.top + 8 (top) + 44 (height) + 12 (gap)
-  const searchTop  = insets.top + 8 + 44 + 12;
-  const resultsTop = searchTop + 48 + 4;
+  // Vertical layout derived from named constants — update constants if Header geometry changes
+  const searchTop  = insets.top + HEADER_TOP_OFFSET + HEADER_HEIGHT + HEADER_BOTTOM_GAP;
+  const resultsTop = searchTop + SEARCH_BAR_HEIGHT + SEARCH_RESULTS_GAP;
+
+  // Clear the blur timer on unmount so it never fires on an unmounted component
+  useEffect(() => () => {
+    if (blurTimerRef.current) clearTimeout(blurTimerRef.current);
+  }, []);
 
   // ── Search state ─────────────────────────────────────────────────────────────
   const [query, setQuery] = useState('');
@@ -77,7 +91,7 @@ export function MapScreen({ navigation }: Props) {
   }, []);
 
   const onSearchBlur = useCallback(() => {
-    setTimeout(() => setShowResults(false), 150);
+    blurTimerRef.current = setTimeout(() => setShowResults(false), 150);
   }, []);
 
   // ── Reset to world view ──────────────────────────────────────────────────────
