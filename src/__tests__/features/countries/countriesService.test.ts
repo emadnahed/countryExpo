@@ -67,9 +67,10 @@ describe('countriesService.getAllCountries', () => {
     mockStorage.getNumber.mockReturnValue(Date.now() - CACHE_TTL - 1000); // expired
     mockApi.fetchAll.mockResolvedValue({ data: MOCK_COUNTRIES } as never);
 
-    await countriesService.getAllCountries();
+    const result = await countriesService.getAllCountries();
 
     expect(mockApi.fetchAll).toHaveBeenCalledTimes(1);
+    expect(result).toEqual(MOCK_COUNTRIES);
   });
 
   it('fetches from API when cache string is missing despite valid timestamp', async () => {

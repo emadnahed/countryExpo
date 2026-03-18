@@ -63,12 +63,15 @@ describe('useCountries', () => {
     mockService.getAllCountries.mockResolvedValue(MOCK_COUNTRIES);
     const store = buildStore(); // empty countries
 
-    renderHook(() => useCountries(), { wrapper: wrapper(store) });
+    const { result } = renderHook(() => useCountries(), { wrapper: wrapper(store) });
 
     // Give the effect time to fire
     await act(async () => {});
 
     expect(mockService.getAllCountries).toHaveBeenCalledTimes(1);
+    // Verify the fetched countries were populated into state
+    expect(result.current.countries).toHaveLength(1);
+    expect(result.current.countries[0].cca3).toBe('DEU');
   });
 
   it('does NOT dispatch fetchCountries when countries are already loaded', async () => {

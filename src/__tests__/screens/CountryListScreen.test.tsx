@@ -153,6 +153,9 @@ describe('CountryListScreen', () => {
     });
     expect(mockService.clearCache).toHaveBeenCalledTimes(1);
     expect(mockService.getAllCountries).toHaveBeenCalled();
+    // Verify the list is still rendered after the refresh cycle
+    expect(getByTestId('country-list')).toBeTruthy();
+    expect(getByTestId('country-card-DEU')).toBeTruthy();
   });
 
   it('computes region counts for the RegionFilter', () => {

@@ -22,13 +22,14 @@ jest.mock('@/features/countries/countriesService', () => ({
   countriesService: { getAllCountries: jest.fn(), clearCache: jest.fn() },
 }));
 
-// Mock LeafletMap — WebView can't run in Jest; expose onCountryPress via testID
+// Mock LeafletMap — WebView can't run in Jest; captures onCountryPress so tests can trigger it
+let capturedOnCountryPress: ((cca3: string) => void) | null = null;
 jest.mock('@/components/LeafletMap', () => {
   const React = require('react');
   const { View } = require('react-native');
   const { forwardRef } = React;
   const LeafletMap = forwardRef(({ onCountryPress, testID }: any, ref: any) => {
-    // Store the callback so tests can trigger it via the imperative handle
+    capturedOnCountryPress = onCountryPress;
     React.useImperativeHandle(ref, () => ({
       flyTo: jest.fn(),
       closePopup: jest.fn(),
@@ -39,7 +40,7 @@ jest.mock('@/components/LeafletMap', () => {
 });
 
 import React from 'react';
-import { render, fireEvent } from '@testing-library/react-native';
+import { render, fireEvent, act } from '@testing-library/react-native';
 import { Provider } from 'react-redux';
 import { configureStore } from '@reduxjs/toolkit';
 import { MapScreen } from '@/features/countries/MapScreen';
@@ -140,5 +141,16 @@ describe('MapScreen', () => {
     const { getByTestId } = renderScreen();
     fireEvent.press(getByTestId('back-btn'));
     expect(mockNavigation.goBack).toHaveBeenCalledTimes(1);
+  });
+
+  it('navigates to CountryDetail when a map marker is pressed and Explore button tapped', async () => {
+    const { getByTestId } = renderScreen();
+    // Simulate a map marker press — triggers showCard which sets selected state
+    await act(async () => {
+      capturedOnCountryPress?.('DEU');
+    });
+    // The country card should now be visible with the Explore button
+    fireEvent.press(getByTestId('explore-country-btn'));
+    expect(mockNavigation.navigate).toHaveBeenCalledWith('CountryDetail', { cca3: 'DEU' });
   });
 });

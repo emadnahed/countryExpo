@@ -48,6 +48,7 @@ describe('Country List, Search & Region Filter', () => {
       await expect(element(by.id('region-chip-europe'))).toBeVisible();
       await expect(element(by.id('region-chip-oceania'))).toBeVisible();
       await element(by.id('region-filter-scroll')).scroll(600, 'left');
+      await expect(element(by.id('region-chip-all'))).toBeVisible();
     });
 
     it('scrolls the list to reveal more countries', async () => {
@@ -279,6 +280,10 @@ describe('Country List, Search & Region Filter', () => {
       // Clear search (Asia filter still active — afterEach resets to All)
       await element(by.id('search-input')).clearText();
       try { await element(by.id('search-input')).tapReturnKey(); } catch {}
+      // Confirm Asia filter is still active: AFG must be visible, JPN no longer the only result
+      await waitFor(element(by.id('country-card-AFG')))
+        .toBeVisible()
+        .withTimeout(5000);
     });
   });
 });

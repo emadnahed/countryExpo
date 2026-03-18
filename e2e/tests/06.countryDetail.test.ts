@@ -31,6 +31,9 @@ describe('Country Detail Screen and Map Navigation', () => {
       // Tap back to return to the list, then clear the "Germany" search text
       // left by navigateToCountry — Map Navigation tests need AFG visible.
       await element(by.id('back-btn')).tap();
+      await waitFor(element(by.id('search-input')))
+        .toBeVisible()
+        .withTimeout(5000);
       await clearSearch();
     });
 
@@ -111,6 +114,9 @@ describe('Country Detail Screen and Map Navigation', () => {
 
     it('map empty state is NOT shown when countries are loaded', async () => {
       await expect(element(by.id('map-empty'))).not.toBeVisible();
+      // map-search-bar is a floating overlay that confirms the map screen is active
+      // (leaflet-map is a WebView behind glass overlays and does not pass Detox's 75% threshold)
+      await expect(element(by.id('map-search-bar'))).toBeVisible();
     });
 
     it('back button returns to the country list', async () => {
