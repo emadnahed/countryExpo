@@ -25,10 +25,15 @@ workflows:
           inputs:
             - node_version: "20"
 
+      - restore-npm-package-manager-cache@1: {}
+
       - script@1.2:
           title: Install dependencies
           inputs:
             - content: npm ci
+
+      - save-npm-package-manager-cache@1: {}
+
 
   # ── ci ────────────────────────────────────────────────────────────────────
   # Runs on any PR targeting main: lint + unit tests only.
