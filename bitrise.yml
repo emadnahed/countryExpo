@@ -7,9 +7,16 @@ app:
     - ANDROID_AVD_NAME: Pixel_API_34
 
 trigger_map:
+  # Full E2E suite + EAS build — only on merges to main
   - push_branch: main
     workflow: e2e
+
+  # Lightweight CI (lint + unit tests) — runs once when a staging→main PR
+  # is opened or updated, acting as the final gate before production merge.
+  # Source-branch restriction prevents random feature-branch PRs from
+  # accidentally matching this rule.
   - pull_request_target_branch: main
+    pull_request_source_branch: staging
     workflow: ci
 
 workflows:
