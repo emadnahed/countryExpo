@@ -14,7 +14,7 @@ module.exports = {
       type: 'ios.app',
       binaryPath: 'ios/build/Build/Products/Debug-iphonesimulator/CountryExplorer.app',
       build:
-        'xcodebuild -workspace ios/CountryExplorer.xcworkspace -scheme CountryExplorer -configuration Debug -sdk iphonesimulator -derivedDataPath ios/build',
+        'EXPO_PUBLIC_E2E=true xcodebuild -workspace ios/CountryExplorer.xcworkspace -scheme CountryExplorer -configuration Debug -sdk iphonesimulator -derivedDataPath ios/build',
     },
     'android.debug': {
       type: 'android.apk',

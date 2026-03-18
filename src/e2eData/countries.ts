@@ -1,9 +1,9 @@
 /**
  * Fixture data used exclusively during Detox E2E runs on CI.
  *
- * Detox passes `-E2E 1` as a launch argument → iOS registers it in
- * NSUserDefaults → countriesService reads it via Settings.get('E2E')
- * and returns this array instead of hitting the real API.
+ * EXPO_PUBLIC_E2E=true is set when running `detox build`. Metro inlines it
+ * at bundle time so countriesService.isE2EMode() returns true and returns
+ * this array instead of hitting the real API.
  *
  * Why: restcountries.com is a public API with no SLA. On a fresh Bitrise VM
  * the call can exceed 30 s or fail entirely, breaking every test before any

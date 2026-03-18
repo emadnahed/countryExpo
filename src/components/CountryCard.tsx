@@ -1,4 +1,4 @@
-import React, { memo, useCallback } from 'react';
+import React, { memo, useCallback, useState } from 'react';
 import { View, Text, Image, Pressable, StyleSheet } from 'react-native';
 import Animated, {
   useSharedValue,
@@ -20,6 +20,7 @@ function CountryCardComponent({ country, onPress }: Props) {
   const colors = useTheme();
   const scale = useSharedValue(1);
   const opacity = useSharedValue(1);
+  const [imgError, setImgError] = useState(false);
 
   const animatedStyle = useAnimatedStyle(() => ({
     transform: [{ scale: scale.value }],
@@ -51,13 +52,16 @@ function CountryCardComponent({ country, onPress }: Props) {
         onPressOut={handlePressOut}
         style={styles.pressable}
       >
-        <View style={[styles.flagWrapper, { borderBottomColor: colors.border }]}>
-          <Image
-            source={{ uri: country.flags.png.replace('w320', 'w640') }}
-            style={styles.flag}
-            resizeMode="cover"
-            accessibilityLabel={country.flags.alt ?? `Flag of ${country.name.common}`}
-          />
+        <View style={[styles.flagWrapper, { backgroundColor: colors.skeleton, borderBottomColor: colors.border }]}>
+          {!imgError && (
+            <Image
+              source={{ uri: country.flags.png.replace('w320', 'w640') }}
+              style={styles.flag}
+              resizeMode="cover"
+              accessibilityLabel={country.flags.alt ?? `Flag of ${country.name.common}`}
+              onError={() => setImgError(true)}
+            />
+          )}
         </View>
         <View style={styles.infoContainer}>
           <View style={styles.headerRow}>
@@ -106,6 +110,7 @@ const styles = StyleSheet.create({
   },
   flagWrapper: {
     width: '100%',
+    height: 180,
     borderBottomWidth: StyleSheet.hairlineWidth,
   },
   flag: {
