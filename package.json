@@ -15,7 +15,7 @@
     "test:all": "jest --ci && detox test --configuration ios.sim.debug",
     "e2e:build": "detox build --configuration ios.sim.debug",
     "e2e:test": "detox test --configuration ios.sim.debug",
-    "e2e:test:ci": "detox test --configuration ios.sim.debug --headless --record-logs all",
+    "e2e:test:ci": "detox test --configuration ios.sim.debug --headless --record-logs failing",
     "e2e:android:build": "detox build --configuration android.emu.debug",
     "e2e:android:test": "detox test --configuration android.emu.debug --headless --record-logs all",
     "e2e:android:ci": "detox test --configuration android.ci.debug --headless --record-logs all",
