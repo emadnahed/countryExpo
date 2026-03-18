@@ -84,7 +84,7 @@
     "transformIgnorePatterns": [
       "node_modules/(?!((jest-)?react-native|@react-native(-community)?)|expo(nent)?|@expo(nent)?/.*|react-navigation|@react-navigation/.*|react-native-mmkv|react-native-webview|@reduxjs|immer|react-redux)"
     ],
-    "maxWorkers": 2,
+    "maxWorkers": "50%",
     "cacheDirectory": ".jest-cache"
   }
 }

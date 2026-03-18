@@ -18,7 +18,7 @@ const REQUIRED_KEYS = [
   'headerBg',
 ] as const;
 
-const HEX_COLOR_RE = /^#[0-9A-Fa-f]{3}([0-9A-Fa-f]{3}([0-9A-Fa-f]{2})?)?$/;
+const HEX_COLOR_RE = /^#([0-9A-Fa-f]{3}|[0-9A-Fa-f]{6}|[0-9A-Fa-f]{8})$/;
 
 describe('Colors.light', () => {
   it.each(REQUIRED_KEYS)('has required key "%s"', (key) => {
