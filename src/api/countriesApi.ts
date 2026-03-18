@@ -3,7 +3,7 @@ import axios from 'axios';
 const BASE_URL = 'https://restcountries.com/v3.1';
 
 // RestCountries API v3.1 enforces a maximum of 10 fields per request
-const FIELDS = 'cca3,name,flags,region,population,capital,languages,currencies,borders,latlng';
+export const FIELDS = 'cca3,name,flags,region,population,capital,languages,currencies,borders,latlng';
 
 export const apiClient = axios.create({
   baseURL: BASE_URL,

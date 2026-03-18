@@ -1,6 +1,4 @@
-import { apiClient, countriesApi } from '@/api/countriesApi';
-
-const FIELDS = 'cca3,name,flags,region,population,capital,languages,currencies,borders,latlng';
+import { apiClient, countriesApi, FIELDS } from '@/api/countriesApi';
 
 describe('apiClient configuration', () => {
   it('uses the restcountries v3.1 base URL', () => {
@@ -21,7 +19,7 @@ describe('countriesApi endpoints', () => {
   let getSpy: jest.SpyInstance;
 
   beforeEach(() => {
-    getSpy = jest.spyOn(apiClient, 'get').mockResolvedValue({ data: [] } as never);
+    getSpy = jest.spyOn(apiClient, 'get').mockResolvedValue({ data: [] } as { data: never[] });
   });
 
   afterEach(() => {
@@ -40,7 +38,7 @@ describe('countriesApi endpoints', () => {
     });
 
     it('returns the axios response', async () => {
-      getSpy.mockResolvedValue({ data: [{ cca3: 'DEU' }] } as never);
+      getSpy.mockResolvedValue({ data: [{ cca3: 'DEU' }] } as { data: { cca3: string }[] });
       const response = await countriesApi.fetchAll();
       expect(response.data).toEqual([{ cca3: 'DEU' }]);
     });
@@ -80,7 +78,7 @@ describe('countriesApi endpoints', () => {
     });
 
     it('returns the axios response', async () => {
-      getSpy.mockResolvedValue({ data: [{ cca3: 'DEU' }] } as never);
+      getSpy.mockResolvedValue({ data: [{ cca3: 'DEU' }] } as { data: { cca3: string }[] });
       const response = await countriesApi.fetchByCodes(['DEU']);
       expect(response.data).toEqual([{ cca3: 'DEU' }]);
     });
