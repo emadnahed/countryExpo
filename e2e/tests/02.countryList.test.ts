@@ -19,7 +19,7 @@ import { waitForCountryList, clearSearch } from '../testUtils';
 
 describe('Country List, Search & Region Filter', () => {
   beforeAll(async () => {
-    await device.launchApp({ newInstance: true });
+    await device.launchApp({ newInstance: true, launchArgs: { E2E: '1' } });
     await waitForCountryList();
   });
 

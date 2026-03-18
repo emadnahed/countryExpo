@@ -29,7 +29,7 @@ describe('Favorites CRUD lifecycle', () => {
   describe('Phase A: fresh install — verify empty state then add favorite', () => {
     beforeAll(async () => {
       // delete: true → reinstalls the app, wiping all MMKV data
-      await device.launchApp({ delete: true });
+      await device.launchApp({ delete: true, launchArgs: { E2E: '1' } });
       await waitForCountryList();
       await navigateToCountry(COUNTRY_NAME, COUNTRY_CCA3);
     });
@@ -61,7 +61,7 @@ describe('Favorites CRUD lifecycle', () => {
   describe('Phase B: verify POST persisted, then remove favorite (DELETE)', () => {
     beforeAll(async () => {
       // Restart without delete — MMKV data from Phase A survives
-      await device.launchApp({ newInstance: true });
+      await device.launchApp({ newInstance: true, launchArgs: { E2E: '1' } });
       await waitForCountryList();
       await navigateToCountry(COUNTRY_NAME, COUNTRY_CCA3);
     });
@@ -94,7 +94,7 @@ describe('Favorites CRUD lifecycle', () => {
   describe('Phase C: verify DELETE persisted after app restart', () => {
     beforeAll(async () => {
       // Restart without delete — deletion must have persisted to MMKV
-      await device.launchApp({ newInstance: true });
+      await device.launchApp({ newInstance: true, launchArgs: { E2E: '1' } });
       await waitForCountryList();
       await navigateToCountry(COUNTRY_NAME, COUNTRY_CCA3);
     });

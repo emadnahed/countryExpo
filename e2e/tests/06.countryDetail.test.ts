@@ -14,7 +14,7 @@ import { waitForCountryList, navigateToCountry, clearSearch } from '../testUtils
 
 describe('Country Detail Screen and Map Navigation', () => {
   beforeAll(async () => {
-    await device.launchApp({ newInstance: true });
+    await device.launchApp({ newInstance: true, launchArgs: { E2E: '1' } });
     await waitForCountryList();
   });
 
