@@ -68,6 +68,8 @@
     "babel-jest": "^29.7.0",
     "babel-plugin-module-resolver": "^5.0.2",
     "detox": "^20.47.0",
+    "eslint": "^9.39.4",
+    "eslint-config-expo": "~55.0.0",
     "jest": "^29.7.0",
     "jest-expo": "~55.0.9",
     "react-test-renderer": "19.2.4",
@@ -76,7 +78,10 @@
   },
   "jest": {
     "preset": "jest-expo",
-    "testPathIgnorePatterns": ["/node_modules/", "/e2e/"],
+    "testPathIgnorePatterns": [
+      "/node_modules/",
+      "/e2e/"
+    ],
     "moduleNameMapper": {
       "^react-native-reanimated$": "<rootDir>/__mocks__/react-native-reanimated.js",
       "^@/(.*)$": "<rootDir>/src/$1"
