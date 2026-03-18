@@ -99,3 +99,4 @@ logs/
 !.claude/settings.local.json
 .agents/
 skills-lock.json
+.jest-cache/
