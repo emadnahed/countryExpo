@@ -58,17 +58,17 @@ workflows:
       - script@1.2:
           title: Expo prebuild (iOS)
           inputs:
-            - content: npx expo prebuild --platform ios --clean
+            - content: npm run ios:prebuild
 
       - script@1.2:
           title: Build iOS app for Detox
           inputs:
-            - content: npx detox build --configuration ios.sim.debug
+            - content: npm run e2e:build
 
       - script@1.2:
           title: Run Detox E2E (iOS simulator)
           inputs:
-            - content: npx detox test --configuration ios.sim.debug --headless --record-logs all
+            - content: npm run e2e:test:ci
 
       - script@1.2:
           title: Trigger EAS Build (preview — APK + IPA)
