@@ -1,11 +1,6 @@
 format_version: "13"
 default_step_lib_source: https://github.com/bitrise-io/bitrise-steplib.git
 
-app:
-  envs:
-    - GRADLEW_PATH: android/gradlew
-    - ANDROID_AVD_NAME: Pixel_API_34
-
 trigger_map:
   # Full E2E suite + EAS build — only on merges to main
   - push_branch: main
@@ -36,7 +31,7 @@ workflows:
             - content: npm ci
 
   # ── ci ────────────────────────────────────────────────────────────────────
-  # Runs on every staging→main PR: lint + unit tests only.
+  # Runs on any PR targeting main: lint + unit tests only.
   ci:
     before_run:
       - install
@@ -52,7 +47,8 @@ workflows:
             - content: npm run test:ci
 
   # ── e2e ───────────────────────────────────────────────────────────────────
-  # Runs on push to main: Detox E2E on Android emulator + EAS preview build.
+  # Runs on push to main: Detox E2E on iOS simulator + EAS preview build.
+  # Android E2E is run locally — emulators are not supported on Apple Silicon.
   # Lint and unit tests are intentionally skipped here — they already passed
   # in the ci workflow that gated the merge.
   e2e:
@@ -60,30 +56,19 @@ workflows:
       - install
     steps:
       - script@1.2:
-          title: Expo prebuild (Android)
+          title: Expo prebuild (iOS)
           inputs:
-            - content: npx expo prebuild --platform android --clean
-
-      - avd-manager@2:
-          inputs:
-            - profile: pixel
-            - api_level: "34"
-            - tag: google_apis
-            - abi: x86_64
-            - create_command_flags: "--sdcard 512M"
-            - start_command_flags: "-no-window -gpu swiftshader_indirect -noaudio -no-boot-anim"
-
-      - wait-for-android-emulator@1: {}
+            - content: npm run ios:prebuild
 
       - script@1.2:
-          title: Build Android debug APKs (app + test)
+          title: Build iOS app for Detox
           inputs:
-            - content: npx detox build --configuration android.ci.debug
+            - content: npm run e2e:build
 
       - script@1.2:
-          title: Run Detox E2E (attached emulator)
+          title: Run Detox E2E (iOS simulator)
           inputs:
-            - content: npm run e2e:android:ci
+            - content: npm run e2e:test:ci
 
       - script@1.2:
           title: Trigger EAS Build (preview — APK + IPA)
