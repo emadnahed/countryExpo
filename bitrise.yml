@@ -11,10 +11,9 @@ trigger_map:
   - push_branch: main
     workflow: e2e
 
-  # Lightweight CI (lint + unit tests) — runs once when a staging→main PR
-  # is opened or updated, acting as the final gate before production merge.
+  # Lightweight CI (lint + unit tests) — runs on any PR targeting main,
+  # including hotfixes that bypass the normal staging→main flow.
   - pull_request_target_branch: main
-    pull_request_source_branch: staging
     workflow: ci
 
 workflows:
