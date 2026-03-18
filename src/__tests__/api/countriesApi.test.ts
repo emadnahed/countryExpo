@@ -19,7 +19,7 @@ describe('countriesApi endpoints', () => {
   let getSpy: jest.SpyInstance;
 
   beforeEach(() => {
-    getSpy = jest.spyOn(apiClient, 'get').mockResolvedValue({ data: [] } as { data: never[] });
+    getSpy = jest.spyOn(apiClient, 'get').mockResolvedValue({ data: [] } as { data: unknown[] });
   });
 
   afterEach(() => {
