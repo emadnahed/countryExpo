@@ -2,7 +2,7 @@ import { waitForCountryList } from '../testUtils';
 
 describe('App Launch', () => {
   beforeAll(async () => {
-    await device.launchApp({ newInstance: true });
+    await device.launchApp({ newInstance: true, launchArgs: { E2E: '1' } });
   });
 
   it('shows search bar on launch', async () => {

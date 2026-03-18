@@ -10,7 +10,7 @@ describe('apiClient configuration', () => {
   });
 
   it('sends JSON Content-Type header', () => {
-    expect(apiClient.defaults.headers.get('Content-Type')).toBe('application/json');
+    expect(apiClient.defaults.headers['Content-Type']).toBe('application/json');
   });
 });
 

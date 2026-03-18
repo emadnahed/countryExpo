@@ -1,13 +1,27 @@
+import { Platform, Settings } from 'react-native';
 import { countriesApi } from '@/api/countriesApi';
 import { storage } from '@/utils/storage';
+import { E2E_COUNTRIES } from '@/e2eData/countries';
+import { E2E_MODE_KEY, E2E_MODE_VALUE } from '@/e2eData/constants';
 import type { Country } from './countriesSlice';
 
 const CACHE_KEY = 'countries_cache';
 const CACHE_TS_KEY = 'countries_cache_ts';
 const CACHE_TTL = 24 * 60 * 60 * 1000; // 24 hours
 
+function isE2EMode(): boolean {
+  if (Platform.OS !== 'ios') return false;
+  try {
+    return Settings.get(E2E_MODE_KEY) === E2E_MODE_VALUE;
+  } catch {
+    return false;
+  }
+}
+
 class CountriesService {
   async getAllCountries(): Promise<Country[]> {
+    if (isE2EMode()) return E2E_COUNTRIES;
+
     const cached = this.readCache();
     if (cached) return cached;
 
