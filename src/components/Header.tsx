@@ -104,8 +104,9 @@ export function Header({
     ? (isDark ? 'rgba(255,255,255,0.07)' : 'rgba(0,0,0,0.05)')
     : (isDark ? 'rgba(255,255,255,0.12)' : 'rgba(0,0,0,0.07)');
 
-  // transparent variant always uses a dark icon so it reads against bright flag images
-  const iconColor = variant === 'transparent' && !isDark ? '#1C1C1C' : colors.text;
+  // colors.text (#1D1D1F light / #F5F5F7 dark) always reads well against the
+  // semi-transparent circle backgrounds used by both glass and transparent variants.
+  const iconColor = colors.text;
 
   // Whether we need side placeholders to visually centre the title pill
   const needsLeftPlaceholder  = !onBack && !!title;

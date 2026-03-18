@@ -437,12 +437,13 @@ export const LeafletMap = forwardRef<LeafletMapHandle, LeafletMapProps>(
       [countries],
     );
 
-    // Rebuild the full HTML when the country list changes.
-    // Theme changes are pushed via injectJavaScript so we don't reload the page.
+    // Rebuild the full HTML whenever markers or theme changes.
+    // isDark must be included — buildLeafletHTML embeds theme colours throughout the
+    // inline CSS (popups, clusters, zoom controls, etc.) and setTheme() only updates
+    // the tile layer URL, not those other elements.
     const html = useMemo(
       () => buildLeafletHTML(markers, isDark),
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-      [markers],
+      [markers, isDark],
     );
 
     useEffect(() => {
