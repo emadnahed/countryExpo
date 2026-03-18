@@ -11,7 +11,7 @@ interface Props {
   counts: Record<string, number>;
 }
 
-export const RegionFilter = memo(({ selectedRegion, onRegionSelect, counts }: Props) => {
+export const RegionFilter = memo(function RegionFilter({ selectedRegion, onRegionSelect, counts }: Props) {
   const totalCount = Object.values(counts).reduce((a, b) => a + b, 0);
   return (
     <ScrollView

@@ -28,7 +28,7 @@ jest.mock('@/components/LeafletMap', () => {
   const React = require('react');
   const { View } = require('react-native');
   const { forwardRef } = React;
-  const LeafletMap = forwardRef(({ onCountryPress, testID }: any, ref: any) => {
+  const LeafletMap = forwardRef(function LeafletMap({ onCountryPress, testID }: any, ref: any) {
     capturedOnCountryPress = onCountryPress;
     React.useImperativeHandle(ref, () => ({
       flyTo: jest.fn(),
