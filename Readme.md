@@ -33,6 +33,16 @@ The application is built using **modern React Native architecture** with a focus
 </p>
 
 ---
+### Screenshots
+
+<p align="center">
+  <img alt="image" src="https://github.com/user-attachments/assets/d19e0988-0231-481e-b7df-146d625e3276"  width="30%"/>  
+  <img alt="image" src="https://github.com/user-attachments/assets/991306cf-440c-496f-8392-3d6c7509875e" width="30%" />
+  <img alt="image" src="https://github.com/user-attachments/assets/c974da5d-e407-475c-8a56-c8a63a308c32" width="30%"/>
+
+</p>
+
+---
 
 #  Architecture
 
