@@ -293,10 +293,10 @@ export function MapScreen({ navigation }: Props) {
               activeOpacity={0.85}
               testID="explore-country-btn"
             >
-              <Text style={[styles.exploreBtnText, { color: '#FFFFFF' }]}>
+              <Text style={[styles.exploreBtnText, { color: colors.onAccent }]}>
                 Explore {selected.name.common}
               </Text>
-              <Ionicons name="arrow-forward" size={15} color="#FFFFFF" />
+              <Ionicons name="arrow-forward" size={15} color={colors.onAccent} />
             </TouchableOpacity>
           </>
         )}

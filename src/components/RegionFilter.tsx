@@ -83,7 +83,7 @@ function Chip({ label, selected, onPress, testID }: ChipProps) {
           style={[
             styles.chipText,
             { color: colors.textSecondary },
-            selected && { color: '#FFFFFF' },
+            selected && { color: colors.onAccent },
           ]}
         >
           {label}

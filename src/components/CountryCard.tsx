@@ -63,8 +63,8 @@ function CountryCardComponent({ country, onPress }: Props) {
                 onError={() => setImgError(true)}
               />
               {/* Region context badge — bottom-left over the flag */}
-              <View style={styles.regionBadge}>
-                <Text style={styles.regionBadgeText}>{country.region}</Text>
+              <View style={[styles.regionBadge, { backgroundColor: colors.badgeOverlay }]}>
+                <Text style={[styles.regionBadgeText, { color: colors.onAccent }]}>{country.region}</Text>
               </View>
             </>
           ) : (
@@ -121,13 +121,11 @@ const styles = StyleSheet.create({
     position: 'absolute',
     bottom: 12,
     left: 16,
-    backgroundColor: 'rgba(0,0,0,0.52)',
     paddingHorizontal: 10,
     paddingVertical: 5,
     borderRadius: 8,
   },
   regionBadgeText: {
-    color: '#FFFFFF',
     fontSize: 12,
     fontWeight: '600',
     letterSpacing: 0.2,
