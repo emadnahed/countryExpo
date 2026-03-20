@@ -288,15 +288,15 @@ export function MapScreen({ navigation }: Props) {
             </View>
 
             <TouchableOpacity
-              style={[styles.exploreBtn, { backgroundColor: colors.text }]}
+              style={[styles.exploreBtn, { backgroundColor: colors.accent }]}
               onPress={goToDetail}
               activeOpacity={0.85}
               testID="explore-country-btn"
             >
-              <Text style={[styles.exploreBtnText, { color: colors.background }]}>
+              <Text style={[styles.exploreBtnText, { color: '#FFFFFF' }]}>
                 Explore {selected.name.common}
               </Text>
-              <Ionicons name="arrow-forward" size={15} color={colors.background} />
+              <Ionicons name="arrow-forward" size={15} color="#FFFFFF" />
             </TouchableOpacity>
           </>
         )}
@@ -390,7 +390,7 @@ const styles = StyleSheet.create({
     gap: 14,
     marginBottom: 14,
   },
-  cardFlag: { width: 64, height: 44, borderRadius: 8 },
+  cardFlag: { width: 72, height: 50, borderRadius: 10 },
   cardInfo: { flex: 1 },
   cardName: { fontSize: 17, fontWeight: '700', letterSpacing: -0.4 },
   cardRegion: { fontSize: 13, marginTop: 3 },

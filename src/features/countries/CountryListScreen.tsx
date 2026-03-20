@@ -6,6 +6,7 @@ import {
   StyleSheet,
   ListRenderItem,
 } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
 import {
@@ -80,8 +81,10 @@ export function CountryListScreen({ navigation }: Props) {
   if (error && filteredCountries.length === 0) {
     return (
       <View testID="error-view" style={[styles.centered, { backgroundColor: colors.background }]}>
-        <Text style={[styles.errorText, { color: colors.error }]}>
-          Failed to load: {error}
+        <Ionicons name="wifi-outline" size={52} color={colors.textMuted} />
+        <Text style={[styles.errorTitle, { color: colors.text }]}>Couldn't load countries</Text>
+        <Text style={[styles.errorSubtitle, { color: colors.textSecondary }]}>
+          Check your connection and pull to retry
         </Text>
       </View>
     );
@@ -106,6 +109,14 @@ export function CountryListScreen({ navigation }: Props) {
       />
       {loading && filteredCountries.length === 0 ? (
         <SkeletonLoader />
+      ) : filteredCountries.length === 0 ? (
+        <View style={styles.emptyState}>
+          <Ionicons name="search-outline" size={52} color={colors.textMuted} />
+          <Text style={[styles.emptyTitle, { color: colors.text }]}>No countries found</Text>
+          <Text style={[styles.emptySubtitle, { color: colors.textSecondary }]}>
+            Try a different search or region
+          </Text>
+        </View>
       ) : (
         <FlatList
           testID="country-list"
@@ -130,5 +141,37 @@ const styles = StyleSheet.create({
   container: { flex: 1 },
   centered: { flex: 1, justifyContent: 'center', alignItems: 'center', padding: 24 },
   list: { paddingVertical: 12, paddingBottom: 60 },
-  errorText: { fontSize: 14, textAlign: 'center' },
+  errorTitle: {
+    fontSize: 20,
+    fontWeight: '700',
+    letterSpacing: -0.5,
+    marginTop: 16,
+    textAlign: 'center',
+  },
+  errorSubtitle: {
+    fontSize: 15,
+    fontWeight: '500',
+    letterSpacing: -0.2,
+    textAlign: 'center',
+    marginTop: 4,
+    paddingHorizontal: 32,
+  },
+  emptyState: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingBottom: 80,
+    gap: 8,
+  },
+  emptyTitle: {
+    fontSize: 20,
+    fontWeight: '700',
+    letterSpacing: -0.5,
+    marginTop: 16,
+  },
+  emptySubtitle: {
+    fontSize: 15,
+    fontWeight: '500',
+    letterSpacing: -0.2,
+  },
 });

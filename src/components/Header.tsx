@@ -81,7 +81,15 @@ export function Header({
 
     return (
       <View
-        style={[styles.solidWrap, { paddingTop: insets.top + 4, backgroundColor: colors.background }]}
+        style={[
+          styles.solidWrap,
+          {
+            paddingTop: insets.top + 4,
+            backgroundColor: colors.background,
+            borderBottomWidth: StyleSheet.hairlineWidth,
+            borderBottomColor: colors.border,
+          },
+        ]}
         testID={testID}
       >
         <View style={styles.solidRow}>
@@ -196,9 +204,9 @@ const styles = StyleSheet.create({
   },
   solidTitle: {
     flex: 1,
-    fontSize: 17,
+    fontSize: 20,
     fontWeight: '700',
-    letterSpacing: -0.4,
+    letterSpacing: -0.5,
     textAlign: 'center',
   },
 

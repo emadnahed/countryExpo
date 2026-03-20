@@ -1,5 +1,5 @@
 import React, { memo, useCallback, useState } from 'react';
-import { View, TextInput, StyleSheet, Dimensions } from 'react-native';
+import { View, TextInput, StyleSheet } from 'react-native';
 import Animated, { useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated';
 import { Ionicons } from '@expo/vector-icons';
 import { useTheme } from '@/hooks/useTheme';
@@ -28,17 +28,16 @@ export const SearchBar = memo(function SearchBar({ value, onChangeText }: Props)
 
   const animatedFocusStyle = useAnimatedStyle(() => {
     return {
-      borderColor: colors.text,
-      borderWidth: 1,
-      // We animate opacity behind or the border color itself
-      opacity: focusAnim.value * 0.2, // Subtle dark ring
+      borderColor: colors.accent,
+      borderWidth: 1.5,
+      opacity: focusAnim.value,
     };
   });
 
   return (
     <View style={[styles.container, { backgroundColor: colors.background }]}>
-      <View style={[styles.inputRow, { backgroundColor: colors.surface }]}>
-        <Ionicons name="search" size={18} color={isFocused ? colors.text : colors.textMuted} style={styles.icon} />
+      <View style={[styles.inputRow, { backgroundColor: colors.surface, shadowColor: '#000' }]}>
+        <Ionicons name="search" size={18} color={isFocused ? colors.accent : colors.textSecondary} style={styles.icon} />
         <TextInput
           testID="search-input"
           style={[styles.input, { color: colors.text }]}
@@ -68,17 +67,17 @@ const styles = StyleSheet.create({
   inputRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    height: 56,
-    borderRadius: 28,
-    paddingHorizontal: 20,
+    height: 52,
+    borderRadius: 14,
+    paddingHorizontal: 16,
     elevation: 2,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.04,
-    shadowRadius: 12,
+    shadowOpacity: 0.05,
+    shadowRadius: 10,
   },
   focusRing: {
-    borderRadius: 28,
+    borderRadius: 14,
   },
   icon: {
     marginRight: 12,
