@@ -37,8 +37,8 @@ The application is built using **modern React Native architecture** with a focus
 
 <p align="center">
   <img alt="image" src="https://github.com/user-attachments/assets/d19e0988-0231-481e-b7df-146d625e3276"  width="30%"/>  
-  <img alt="image" src="https://github.com/user-attachments/assets/991306cf-440c-496f-8392-3d6c7509875e" width="30%" />
-  <img alt="image" src="https://github.com/user-attachments/assets/c974da5d-e407-475c-8a56-c8a63a308c32" width="30%"/>
+  <img alt="image" src="https://github.com/user-attachments/assets/e8632793-30e6-458b-88ea-d96e84ea2fed" width='30%' />
+  <img alt="image" src="https://github.com/user-attachments/assets/a8b9a63d-8d4a-4fe9-aa71-ebe718f0d21f" width='30%' />
 
 </p>
 
