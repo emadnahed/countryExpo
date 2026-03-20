@@ -110,7 +110,7 @@ export function CountryDetailScreen({ route, navigation }: Props) {
   if (!country) {
     return (
       <View style={[styles.centered, { backgroundColor: colors.background }]}>
-        <ActivityIndicator size="large" color={colors.text} />
+        <ActivityIndicator size="large" color={colors.accent} />
       </View>
     );
   }
@@ -143,7 +143,7 @@ export function CountryDetailScreen({ route, navigation }: Props) {
         <Animated.View entering={FadeInDown.delay(100).springify().damping(16)}>
           <View style={[styles.contentPanel, { backgroundColor: colors.surface }]}>
 
-            <View style={styles.dragHandle} />
+            <View style={[styles.dragHandle, { backgroundColor: colors.border }]} />
 
             <View style={styles.titleRow}>
               <View style={styles.titleTextContainer}>
@@ -157,22 +157,29 @@ export function CountryDetailScreen({ route, navigation }: Props) {
               <TouchableOpacity
                 testID={isFavorite ? 'favorite-btn-active' : 'favorite-btn-inactive'}
                 onPress={handleFavorite}
-                style={[styles.favBtn, { backgroundColor: isFavorite ? colors.favorite : colors.inputBg }]}
+                style={[
+                  styles.favBtn,
+                  {
+                    backgroundColor: isFavorite ? colors.favorite : 'transparent',
+                    borderWidth: 1.5,
+                    borderColor: isFavorite ? colors.favorite : colors.border,
+                  },
+                ]}
                 activeOpacity={0.8}
               >
-                <Ionicons name={isFavorite ? 'star' : 'star-outline'} size={24} color={isFavorite ? '#FFF' : colors.textMuted} />
+                <Ionicons name={isFavorite ? 'star' : 'star-outline'} size={22} color={isFavorite ? '#FFF' : colors.textSecondary} />
               </TouchableOpacity>
             </View>
 
             <View style={[styles.quickStatsRow, { backgroundColor: colors.background }]}>
               <View style={styles.statBox}>
-                <Ionicons name="people" size={20} color={colors.textSecondary} />
+                <Ionicons name="people" size={20} color={colors.accent} />
                 <Text testID="stat-population" style={[styles.statValue, { color: colors.text }]}>{formatPopulation(country.population)}</Text>
                 <Text style={[styles.statLabel, { color: colors.textMuted }]}>Population</Text>
               </View>
               <View style={[styles.statBoxBorder, { backgroundColor: colors.border }]} />
               <View style={styles.statBox}>
-                <Ionicons name="earth" size={20} color={colors.textSecondary} />
+                <Ionicons name="earth" size={20} color={colors.accent} />
                 <Text testID="stat-region" style={[styles.statValue, { color: colors.text }]}>{country.region}</Text>
                 <Text style={[styles.statLabel, { color: colors.textMuted }]}>Region</Text>
               </View>
@@ -230,8 +237,8 @@ function InfoRow({ icon, label, value, isLast = false }: { icon: any; label: str
   const colors = useTheme();
   return (
     <View style={[styles.infoRow, { borderBottomColor: colors.border }, isLast && styles.noBorder]}>
-      <View style={[styles.iconWrapper, { backgroundColor: colors.inputBg }]}>
-        <Ionicons name={icon} size={20} color={colors.textSecondary} />
+      <View style={[styles.iconWrapper, { backgroundColor: colors.accentMuted }]}>
+        <Ionicons name={icon} size={20} color={colors.accent} />
       </View>
       <View style={styles.infoTextContainer}>
         <Text style={[styles.infoLabel, { color: colors.textSecondary }]}>{label.toUpperCase()}</Text>
@@ -275,7 +282,6 @@ const styles = StyleSheet.create({
     width: 40,
     height: 5,
     borderRadius: 3,
-    backgroundColor: '#E0E0E0',
     alignSelf: 'center',
     marginBottom: 24,
   },
@@ -305,8 +311,9 @@ const styles = StyleSheet.create({
   },
   quickStatsRow: {
     flexDirection: 'row',
-    borderRadius: 24,
+    borderRadius: 20,
     paddingVertical: 20,
+    paddingHorizontal: 24,
     marginBottom: 36,
     alignItems: 'center',
   },
@@ -382,16 +389,16 @@ const styles = StyleSheet.create({
   borderChip: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingRight: 18,
-    paddingLeft: 6,
-    paddingVertical: 6,
-    borderRadius: 30,
+    paddingRight: 16,
+    paddingLeft: 8,
+    paddingVertical: 7,
+    borderRadius: 12,
     borderWidth: 1,
   },
   borderFlag: {
     width: 28,
-    height: 28,
-    borderRadius: 14,
+    height: 20,
+    borderRadius: 4,
     marginRight: 10,
   },
   borderChipText: {

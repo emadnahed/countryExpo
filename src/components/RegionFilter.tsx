@@ -72,8 +72,8 @@ function Chip({ label, selected, onPress, testID }: ChipProps) {
         testID={testID}
         style={[
           styles.chip,
-          { backgroundColor: colors.surface, borderColor: 'transparent' },
-          selected && { backgroundColor: colors.text, borderColor: colors.text },
+          { backgroundColor: colors.surface, borderColor: colors.border },
+          selected && { backgroundColor: colors.accent, borderColor: colors.accent },
         ]}
         onPress={onPress}
         onPressIn={handlePressIn}
@@ -83,7 +83,7 @@ function Chip({ label, selected, onPress, testID }: ChipProps) {
           style={[
             styles.chipText,
             { color: colors.textSecondary },
-            selected && { color: colors.surface },
+            selected && { color: colors.onAccent },
           ]}
         >
           {label}
@@ -95,30 +95,30 @@ function Chip({ label, selected, onPress, testID }: ChipProps) {
 
 const styles = StyleSheet.create({
   scroll: {
-    height: 70,
+    height: 72,
     flexShrink: 0,
   },
   container: {
     paddingHorizontal: 20,
-    paddingVertical: 12,
-    gap: 12,
+    paddingVertical: 14,
+    gap: 10,
     flexDirection: 'row',
     alignItems: 'center',
   },
   chip: {
-    paddingHorizontal: 22,
-    paddingVertical: 12,
-    borderRadius: 28,
+    paddingHorizontal: 20,
+    paddingVertical: 10,
+    borderRadius: 12,
     borderWidth: 1,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.05,
+    shadowOpacity: 0.04,
     shadowRadius: 4,
     elevation: 2,
   },
   chipText: {
-    fontSize: 15,
+    fontSize: 14,
     fontWeight: '600',
-    letterSpacing: -0.2,
+    letterSpacing: -0.1,
   },
 });

@@ -9,7 +9,7 @@ import Animated, {
 } from 'react-native-reanimated';
 import { useTheme } from '@/hooks/useTheme';
 
-const CARD_COUNT = 8;
+const CARD_COUNT = 4;
 
 export function SkeletonLoader() {
   const colors = useTheme();
@@ -31,13 +31,15 @@ export function SkeletonLoader() {
         <Animated.View
           key={i}
           testID="skeleton-card"
-          style={[styles.card, { backgroundColor: colors.surface }, animatedStyle]}
+          style={[styles.card, { backgroundColor: colors.surface, shadowColor: '#000' }, animatedStyle]}
         >
-          <View style={[styles.flag, { backgroundColor: colors.skeleton }]} />
-          <View style={styles.info}>
+          {/* Flag placeholder — full width, same height as CountryCard flag */}
+          <View style={[styles.flagPlaceholder, { backgroundColor: colors.skeleton }]} />
+
+          {/* Info row — name line + detail line */}
+          <View style={styles.infoContainer}>
             <View style={[styles.line, styles.nameLine, { backgroundColor: colors.skeleton }]} />
-            <View style={[styles.line, styles.shortLine, { backgroundColor: colors.skeleton }]} />
-            <View style={[styles.line, styles.shortLine, { backgroundColor: colors.skeleton }]} />
+            <View style={[styles.line, styles.detailLine, { backgroundColor: colors.skeleton }]} />
           </View>
         </Animated.View>
       ))}
@@ -46,23 +48,38 @@ export function SkeletonLoader() {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, paddingTop: 8 },
-  card: {
-    flexDirection: 'row',
-    marginHorizontal: 16,
-    marginVertical: 6,
-    borderRadius: 12,
-    overflow: 'hidden',
-    height: 82,
-    elevation: 1,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.06,
-    shadowRadius: 3,
+  container: {
+    flex: 1,
+    paddingTop: 8,
   },
-  flag: { width: 110 },
-  info: { flex: 1, padding: 12, justifyContent: 'center', gap: 8 },
-  line: { height: 11, borderRadius: 6 },
-  nameLine: { width: '65%' },
-  shortLine: { width: '45%' },
+  card: {
+    marginHorizontal: 20,
+    marginVertical: 10,
+    borderRadius: 24,
+    overflow: 'hidden',
+    elevation: 4,
+    shadowOffset: { width: 0, height: 8 },
+    shadowOpacity: 0.06,
+    shadowRadius: 16,
+  },
+  flagPlaceholder: {
+    width: '100%',
+    height: 180,
+  },
+  infoContainer: {
+    padding: 20,
+    paddingTop: 16,
+    gap: 10,
+  },
+  line: {
+    borderRadius: 8,
+  },
+  nameLine: {
+    height: 16,
+    width: '55%',
+  },
+  detailLine: {
+    height: 12,
+    width: '40%',
+  },
 });

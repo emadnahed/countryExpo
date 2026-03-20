@@ -28,9 +28,9 @@ describe('SkeletonLoader', () => {
     expect(getByTestId('skeleton-loader')).toBeTruthy();
   });
 
-  it('renders exactly 8 skeleton cards', () => {
+  it('renders exactly 4 skeleton cards', () => {
     const { getAllByTestId } = render(<SkeletonLoader />);
-    expect(getAllByTestId('skeleton-card')).toHaveLength(8);
+    expect(getAllByTestId('skeleton-card')).toHaveLength(4);
   });
 
   it('renders without crashing', () => {
